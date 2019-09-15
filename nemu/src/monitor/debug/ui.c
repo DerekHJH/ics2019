@@ -8,6 +8,7 @@
 #include <readline/history.h>
 
 void cpu_exec(uint64_t);
+void isa_reg_display(void);
 
 /* We use the `readline' library to provide more flexibility to read from stdin. */
 static char* rl_gets() {
@@ -36,6 +37,63 @@ static int cmd_q(char *args) {
   return -1;
 }
 
+static int cmd_si(char *args) {
+ 	if(args==NULL)
+	{
+    cpu_exec(1);
+	}
+	else
+	{
+  	char *Args=strtok(args," ");
+  	int len=strlen(Args),N=0;
+    
+	  for(int i=0;i<len;i++)
+  	{
+    	N=N+(int)Args[i]-(int)('0');
+	  }
+		cpu_exec(N);
+	}
+	
+	return 0;
+}
+
+static int cmd_info(char *args)
+{
+  char *Args=strtok(args," ");
+	if(strcmp(Args,"r")==0)isa_reg_display();
+	else if(strcmp(Args,"w")==0)
+	{
+
+	}
+	else
+  {
+
+	}	
+  return 0;	
+}
+
+static int cmd_x(char *args)
+{
+	char *Args=strtok(args," ");
+  int N=0,len=strlen(Args);
+	uint32_t temp=0,EXPR=0x100000;
+	
+	for(int i=0;i<len;i++)
+	{
+		N=N+(int)Args[i]-(int)('0');
+	}
+  
+	for(int i=1;i<=N;i++)
+	{
+    temp=paddr_read(EXPR,4);
+		printf("0x%08x:    0x%08x    %u\n",EXPR,temp,temp);
+		EXPR=EXPR+4;
+	}
+
+	return 0;
+}
+
+
 static int cmd_help(char *args);
 
 static struct {
@@ -46,8 +104,10 @@ static struct {
   { "help", "Display informations about all supported commands", cmd_help },
   { "c", "Continue the execution of the program", cmd_c },
   { "q", "Exit NEMU", cmd_q },
-
-  /* TODO: Add more commands */
+  {"si", "Run N successive instructions of the programm and then halt, with default N=1. We can add an integer argument N after si", cmd_si },
+	{"info", "Print certain information corresponding to the argument, with 'r'--registers info and 'w'--watchpoint info", cmd_info},
+	{"x", "x N EXPR. Print the information stored at given address denoted by the EXPR 4bytes a time. Print N times/groups", cmd_x}
+ 	/* TODO: Add more commands */
 
 };
 
