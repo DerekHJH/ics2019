@@ -6,6 +6,9 @@
 #include <sys/types.h>
 #include <regex.h>
 
+//In order to use atoi
+#include<stdlib.h>
+
 enum {
   TK_NOTYPE = 256, TK_PLUS, TK_MINUS, TK_MUL, TK_DIV, TK_LP, TK_RP, TK_NUM, TK_EQ   
 		//I chaged the order of TK_EQ, which is originally at position2. And changed the symbol of "+";
@@ -86,9 +89,32 @@ static bool make_token(char *e) {
          * of tokens, some extra actions should be performed.
          */
 
-        switch (rules[i].token_type) {
-          default: TODO();
-        }
+				//There is no check for over large nr_token
+        if(rules[i].token_type>=TK_PLUS&&rules[i].token_type<=TK_NUM)
+				{
+					tokens[++nr_token].type=rules[i].token_type;
+				  memset(tokens[nr_token].str,0,sizeof(tokens[nr_token].str));
+				  if(rules[i].token_type==TK_NUM)
+					{
+            //Check if the number is too long
+						if(substr_len>31||substr_len<0)
+						{
+							printf("The number in the expression is too large!!!\n");
+							assert(0);
+						}
+							
+						for(int i=0;i<substr_len;i++)
+						{
+							tokens[nr_token].str[i]=*(substr_start+i);
+						}
+						tokens[nr_token].str[substr_len]='\0';
+					}
+
+				}
+				else
+				{
+
+				}
 
         break;
       }
@@ -103,6 +129,74 @@ static bool make_token(char *e) {
   return true;
 }
 
+void Bad_Expr()
+{
+	printf("Bad expression\n");
+	assert(0);
+	return;
+}
+
+bool check_parenthsis(int l,int r)
+{
+  if(!(tokens[l].type==TK_LP&&tokens[r].type==TK_RP))return false;
+	else
+	{
+		for(int i=l+1;i<r;i++)
+		  if(tokens[i].type==TK_RP)return false;
+	}
+	return true;
+}	 
+
+int eval(int l,int r)
+{
+  if(l>r)Bad_Expr();
+	else if(l==r)
+	{
+		if(tokens[l].type!=TK_NUM)Bad_Expr();
+		else return atoi(tokens[l].str);
+	}
+	else if(check_parenthsis(l,r))return eval(l+1,r-1);
+	else
+	{
+    int op=0;
+    for(op=r;op>=l;op--)
+			if(tokens[op].type==TK_RP)
+			{
+				while(tokens[op].type!=TK_LP&&op>=l)op--;
+				if(op<l)Bad_Expr();
+			}
+	  	else if(tokens[op].type==TK_PLUS||tokens[op].type==TK_MINUS)break;
+   
+	 	if(op<l)
+		{
+       for(op=r;op>=l;op--)
+	    	 if(tokens[op].type==TK_RP)
+         {
+       	   while(tokens[op].type!=TK_LP&&op>=l)op--;
+					 if(op<l)Bad_Expr();
+         }
+         else if(tokens[op].type==TK_MUL||tokens[op].type==TK_DIV)break;
+		}
+
+		int val1=eval(l,op-1);
+		int val2=eval(op+1,r);
+
+		switch(tokens[op].type)
+		{
+			case TK_PLUS:return val1+val2;
+			case TK_MINUS:return val1-val2;
+			case TK_MUL:return val1*val2;
+			case TK_DIV:return val1/val2;
+			default:
+				printf("There is no correct operation\n");
+				assert(0);
+		}
+
+		
+	}
+  return 0;//It is only added to pass the compilation
+}
+
 uint32_t expr(char *e, bool *success) {
   if (!make_token(e)) {
     *success = false;
@@ -110,7 +204,6 @@ uint32_t expr(char *e, bool *success) {
   }
 
   /* TODO: Insert codes to evaluate the expression. */
-  TODO();
-
-  return 0;
+  eval(1,nr_token);
+	return 0;
 }
