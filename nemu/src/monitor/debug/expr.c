@@ -7,7 +7,8 @@
 #include <regex.h>
 
 enum {
-  TK_NOTYPE = 256, TK_EQ
+  TK_NOTYPE = 256, TK_PLUS, TK_MINUS, TK_MUL, TK_DIV, TK_LP, TK_RP, TK_NUM, TK_EQ   
+		//I chaged the order of TK_EQ, which is originally at position2. And changed the symbol of "+";
 
   /* TODO: Add more token types */
 
@@ -23,7 +24,13 @@ static struct rule {
    */
 
   {" +", TK_NOTYPE},    // spaces
-  {"\\+", '+'},         // plus
+  {"\\+", TK_PLUS},    // plus
+	{"-", TK_MINUS},    //minus
+	{"\\*", TK_MUL},    //multiply
+	{"/", TK_DIV},    //divide
+	{"\\(", TK_LP},    //left parenthsis
+	{"\\)", TK_RP},    //right parenthesis
+	{"[0-9]+", TK_NUM},   //numbers
   {"==", TK_EQ}         // equal
 };
 
