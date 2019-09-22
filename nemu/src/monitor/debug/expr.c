@@ -129,33 +129,43 @@ static bool make_token(char *e) {
   return true;
 }
 
-void Bad_Expr()
-{
-	printf("Bad expression\n");
-	assert(0);
-	return;
-}
 
 bool check_parenthsis(int l,int r)
 {
   if(!(tokens[l].type==TK_LP&&tokens[r].type==TK_RP))return false;
 	else
 	{
+		int cnt=0;
 		for(int i=l+1;i<r;i++)
-		  if(tokens[i].type==TK_RP)return false;
+		{
+		  if(tokens[i].type==TK_LP)cnt++;
+			else if(tokens[i].type==TK_RP)cnt--;
+			if(cnt<0)return false;
+		}	
 	}
 	return true;
 }	 
 
-int eval(int l,int r)
+uint32_t eval(int l,int r)
 {
-  if(l>r)Bad_Expr();
+  if(l>r)
+	{
+   	printf("Bad expresion in debug at line %d\n",__LINE__);
+  	assert(0);                                                 
+  }
 	else if(l==r)
 	{
-		if(tokens[l].type!=TK_NUM)Bad_Expr();
+		if(tokens[l].type!=TK_NUM)
+		{
+			printf("Bad expresion in debug at line %d\n",__LINE__);
+			assert(0);                                                 
+		}
 		else return atoi(tokens[l].str);
 	}
-	else if(check_parenthsis(l,r))return eval(l+1,r-1);
+	else if(check_parenthsis(l,r))
+	{
+		return eval(l+1,r-1);
+	}
 	else
 	{
     int op=0;
@@ -163,7 +173,11 @@ int eval(int l,int r)
 			if(tokens[op].type==TK_RP)
 			{
 				while(tokens[op].type!=TK_LP&&op>=l)op--;
-				if(op<l)Bad_Expr();
+				if(op<l)
+				{
+        	printf("Bad expresion in debug at line %d\n",__LINE__);
+        	assert(0);                                                 
+				}
 			}
 	  	else if(tokens[op].type==TK_PLUS||tokens[op].type==TK_MINUS)break;
    
@@ -173,13 +187,17 @@ int eval(int l,int r)
 	    	 if(tokens[op].type==TK_RP)
          {
        	   while(tokens[op].type!=TK_LP&&op>=l)op--;
-					 if(op<l)Bad_Expr();
+					 if(op<l)
+					 {
+             printf("Bad expresion in debug at line %d\n",__LINE__);
+             assert(0);                                                 
+				   }
          }
          else if(tokens[op].type==TK_MUL||tokens[op].type==TK_DIV)break;
 		}
 
-		int val1=eval(l,op-1);
-		int val2=eval(op+1,r);
+		uint32_t val1=eval(l,op-1);
+		uint32_t val2=eval(op+1,r);
 
 		switch(tokens[op].type)
 		{
@@ -188,7 +206,7 @@ int eval(int l,int r)
 			case TK_MUL:return val1*val2;
 			case TK_DIV:return val1/val2;
 			default:
-				printf("There is no correct operation\n");
+				printf("There is no correct operation in debug at line %d\n",__LINE__);
 				assert(0);
 		}
 
@@ -204,6 +222,6 @@ uint32_t expr(char *e, bool *success) {
   }
 
   /* TODO: Insert codes to evaluate the expression. */
-  eval(1,nr_token);
-	return 0;
+
+  return eval(1,nr_token);
 }
