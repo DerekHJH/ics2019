@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <time.h>
 
+
 const char *regsl[] = {"eax", "ecx", "edx", "ebx", "esp", "ebp", "esi", "edi"};
 const char *regsw[] = {"ax", "cx", "dx", "bx", "sp", "bp", "si", "di"};
 const char *regsb[] = {"al", "cl", "dl", "bl", "ah", "ch", "dh", "bh"};
@@ -49,6 +50,25 @@ void isa_reg_display()
 	return;
 }
 
-uint32_t isa_reg_str2val(const char *s, bool *success) {
+uint32_t isa_reg_str2val(const char *s, bool *success) 
+{
+  for(int index=0;index<8;index++)
+	{
+    if(strcmp(reg_name(index,1),s)==0)
+		{
+			*success=true;
+			return reg_b(index);
+		}
+		else if(strcmp(reg_name(index,2),s)==0)
+		{
+			*success=true;
+			return reg_w(index);
+		}
+		else if(strcmp(reg_name(index,4),s)==0)
+		{
+			*success=true;
+		  return reg_l(index);
+		}
+	}
   return 0;
 }

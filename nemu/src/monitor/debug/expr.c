@@ -6,8 +6,11 @@
 #include <sys/types.h>
 #include <regex.h>
 
-//In order to use atoi
+//Self added
+//in order to use atoi 
 #include<stdlib.h>
+//in order to use isa_reg_str2val
+uint32_t isa_reg_str2val(char *,bool *);
 
 enum {
   TK_NOTYPE = 256, TK_PLUS, TK_MINUS, TK_MUL, TK_DIV, 
@@ -47,9 +50,9 @@ static struct rule {
 	{">=", TK_GE},    //greater or equal
 	{">", TK_G},    //greater
 
-	{"0x[0-9a-f]*", TK_HEXNUM},    //hex number  
+	{"0x[0-9a-fA-F]*", TK_HEXNUM},    //hex number  
 	{"[0-9]+", TK_DIGNUM},   //digital numbers
-	{"$[a-z]*", TK_REG},    //registers
+	{"\\$[a-z]*", TK_REG},    //registers
 
 };
 
@@ -106,7 +109,7 @@ static bool make_token(char *e) {
          */
 
 				//There is no check for over large nr_token
-        if(rules[i].token_type>=TK_PLUS&&rules[i].token_type<=TK_NOT)
+        if(rules[i].token_type>=TK_PLUS&&rules[i].token_type<=TK_REG)
 				{
 					tokens[++nr_token].type=rules[i].token_type;
 				  tokens[nr_token].num=0;
@@ -114,7 +117,7 @@ static bool make_token(char *e) {
 					{
 						if(nr_token==1||!(tokens[nr_token-1].type>=TK_DIGNUM&&tokens[nr_token-1].type<=TK_REG))tokens[nr_token].type=TK_DEREF;
 					}
-					else  if(rules[i].token_type==TK_DIGNUM)
+					else if(rules[i].token_type==TK_DIGNUM)
 					{		
 						uint32_t pow10=1;
 						for(int i=substr_len-1;i>=0;i--)
@@ -142,12 +145,15 @@ static bool make_token(char *e) {
 					}
 					else if(rules[i].token_type==TK_REG)
           {
-                //We need to extract the value in those regesters
+						bool *Success=malloc(sizeof(bool));
+						tokens[nr_token].type=TK_DIGNUM;
+						tokens[nr_token].num=isa_reg_str2val(substr_start, Success);
+						if(!Success) 
+						{
+							printf("Failed to extract value from regesters!!\n");
+							assert(0);
+						}
 					}
-				}
-				else
-				{
-                    //for NOTYPE operations
 				}
 
         break;
@@ -180,7 +186,7 @@ bool check_parenthsis(int l,int r)
 	return true;
 }	 
 
-uint32_t eval(int l,int r)///////Add more operations here.
+uint32_t eval(int l,int r)
 {
   if(l>r)
 	{
@@ -191,10 +197,6 @@ uint32_t eval(int l,int r)///////Add more operations here.
 	{
 		if(tokens[l].type!=TK_DIGNUM)
 		{
-			for(int i=1;i<=nr_token;i++)
-				if(tokens[i].type==TK_DIGNUM)printf("%u",tokens[i].num);
-				else printf("+");
-			printf("\n%u\n",nr_token);
 			printf("Bad expresion in debug at line %d\n",__LINE__);
 			assert(0);                                                 
 		}
