@@ -18,8 +18,7 @@ enum {
 	TK_EQ, TK_NEQ, TK_LE, TK_L, TK_GE, TK_G, 
 	TK_AND, TK_OR, TK_NOT,
 	TK_DIGNUM, TK_HEXNUM, TK_REG,
-  TK_DEREF //Originally, all * is regarded as the multipication sign and shall be identified as dereference sign later.	
-		//I changed the order of TK_EQ, which is originally at position2. And changed the symbol of "+";
+  TK_DEREF //Originally, all * is regarded as the multipication sign and shall be identified as dereference sign later.
 
   /* TODO: Add more token types */
 
@@ -49,6 +48,9 @@ static struct rule {
 	{"<", TK_L},    //less
 	{">=", TK_GE},    //greater or equal
 	{">", TK_G},    //greater
+	{"&&", TK_AND},    //and
+	{"\\|\\|", TK_OR},    //or
+	{"!", TK_NOT},    //not
 
 	{"0x[0-9a-fA-F]*", TK_HEXNUM},    //hex number  
 	{"[0-9]+", TK_DIGNUM},   //digital numbers
@@ -78,7 +80,7 @@ void init_regex() {
 }
 
 typedef struct token {
-  int type;
+  int type,preced;
   uint32_t num;
 } Token;
 
@@ -109,52 +111,128 @@ static bool make_token(char *e) {
          */
 
 				//There is no check for over large nr_token
-        if(rules[i].token_type>=TK_PLUS&&rules[i].token_type<=TK_REG)
+				if(rules[i].token_type!=TK_NOTYPE)
 				{
-					tokens[++nr_token].type=rules[i].token_type;
-				  tokens[nr_token].num=0;
-					if(rules[i].token_type==TK_MUL)
+          tokens[++nr_token].type=rules[i].token_type;
+					tokens[nr_token].num=0;
+					tokens[nr_token].preced=0;
+					switch(rules[i].token_type)
 					{
-						if(nr_token==1||!(tokens[nr_token-1].type>=TK_DIGNUM&&tokens[nr_token-1].type<=TK_REG))tokens[nr_token].type=TK_DEREF;
-					}
-					else if(rules[i].token_type==TK_DIGNUM)
-					{		
-						uint32_t pow10=1;
-						for(int i=substr_len-1;i>=0;i--)
+						case TK_OR:
 						{
-							tokens[nr_token].num+=((*(substr_start+i))-'0')*pow10;
-							pow10*=10;
+              tokens[nr_token].preced=1;
+							break;
+						}                               
+						case TK_AND:
+						{
+              tokens[nr_token].preced=2;
+							break;
+						}                            
+						case TK_EQ:
+						{
+              tokens[nr_token].preced=3;
+							break;
+						}                            
+						case TK_NEQ:
+						{
+              tokens[nr_token].preced=3;
+							break;
+						}                            
+						case TK_L:
+						{
+              tokens[nr_token].preced=4;
+							break;
+						}                            
+						case TK_LE:
+						{
+              tokens[nr_token].preced=4;
+							break;
+						}                            
+						case TK_G:
+						{
+              tokens[nr_token].preced=4;
+							break;
+						}                            
+						case TK_GE:
+						{
+              tokens[nr_token].preced=4;
+							break;
+						}                            
+						case TK_PLUS:
+						{
+							tokens[nr_token].preced=5;
+              break;
 						}
-					}
-					else if(rules[i].token_type==TK_HEXNUM)
-					{
-						tokens[nr_token].type=TK_DIGNUM;
-						uint32_t pow16=1;
-            for(int i=substr_len-1;i>=2&&(*(substr_start+i))!='x';i--)
+						case TK_MINUS:
 						{
-							char temp=*(substr_start+i);
-							if(temp>='a'&&temp<='f')tokens[nr_token].num+=(temp-'a'+10)*pow16;
-							else if(temp>='0'&&temp<='9')tokens[nr_token].num+=(temp-'0')*pow16;
-							else 
+							tokens[nr_token].preced=5;
+							break;
+						}                             
+						case TK_MUL:
+						{
+              tokens[nr_token].preced=6;
+              if(nr_token==1||!(tokens[nr_token-1].type>=TK_DIGNUM&&tokens[nr_token-1].type<=TK_REG))
 							{
-								printf("Invalid hex number!!!\n");
-								assert(0);
+								tokens[nr_token].type=TK_DEREF;
+								tokens[nr_token].preced=21;
 							}
-							pow16*=16;
+              break;
 						}
-					}
-					else if(rules[i].token_type==TK_REG)
-          {
-						bool *Success=malloc(sizeof(bool));
-						tokens[nr_token].type=TK_DIGNUM;
-						tokens[nr_token].num=isa_reg_str2val(substr_start, Success);
-						if(!Success) 
+						case TK_DIV:
 						{
-							printf("Failed to extract value from regesters!!\n");
-							assert(0);
+							tokens[nr_token].preced=6;
+							break;
 						}
+						case TK_NOT:
+						{
+							tokens[nr_token].preced=21;
+							break;
+						}                            
+						case TK_DIGNUM:
+						{
+					    uint32_t pow10=1;
+						  for(int i=substr_len-1;i>=0;i--)
+					  	{
+						   	tokens[nr_token].num+=((*(substr_start+i))-'0')*pow10;
+						   	pow10*=10;
+					   	}
+							break;
+						}
+						case TK_HEXNUM:
+						{
+							tokens[nr_token].type=TK_DIGNUM;
+							uint32_t pow16=1;
+              for(int i=substr_len-1;i>=2&&(*(substr_start+i))!='x';i--)
+					  	{
+					  		char temp=*(substr_start+i);
+					  		if(temp>='a'&&temp<='f')tokens[nr_token].num+=(temp-'a'+10)*pow16;
+					  		else if(temp>='0'&&temp<='9')tokens[nr_token].num+=(temp-'0')*pow16;
+					  		else 
+					  		{
+					  			printf("Invalid hex number!!!\n");
+					  			assert(0);
+					  		}
+					  		pow16*=16;
+					  	} 
+              break;
+						}
+						case TK_REG:
+						{
+							bool *Success=malloc(sizeof(bool));
+ 			  			tokens[nr_token].type=TK_DIGNUM;
+ 			  			tokens[nr_token].num=isa_reg_str2val(substr_start, Success);
+ 			  			if(!Success) 
+ 			  			{
+ 			  				printf("Failed to extract value from regesters!!\n");
+ 			  				assert(0);
+ 			  			}
+              break;
+						}							
+
+
+
 					}
-				}
+		  	}
 
         break;
       }
@@ -208,43 +286,63 @@ uint32_t eval(int l,int r)
 	}
 	else
 	{
-    int op=0;
+    int op=0,k=r,Min=10000;
     for(op=r;op>=l;op--)
 			if(tokens[op].type==TK_RP)
 			{
 				while(tokens[op].type!=TK_LP&&op>=l)op--;
 				if(op<l)
 				{
-        	printf("Bad expresion in debug at line %d\n",__LINE__);
+        	printf("Unmathched right parenthesis!!\n");
         	assert(0);                                                 
 				}
 			}
-	  	else if(tokens[op].type==TK_PLUS||tokens[op].type==TK_MINUS)break;
-   
-	 	if(op<l)
-		{
-       for(op=r;op>=l;op--)
-	    	 if(tokens[op].type==TK_RP)
-         {
-       	   while(tokens[op].type!=TK_LP&&op>=l)op--;
-					 if(op<l)
-					 {
-             printf("Bad expresion in debug at line %d\n",__LINE__);
-             assert(0);                                                 
-				   }
-         }
-         else if(tokens[op].type==TK_MUL||tokens[op].type==TK_DIV)break;
-		}
+      else if(tokens[op].type==TK_LP)
+			{
+				printf("Unmatched left parenthesis!!\n");
+				assert(0);
+			}	
+		  else if(tokens[op].type!=TK_DIGNUM)
+			{
+        if(tokens[op].preced<Min)
+				{
+					Min=tokens[op].preced;
+					k=op;
+				}				
+			}
 
-		uint32_t val1=eval(l,op-1);
-		uint32_t val2=eval(op+1,r);
+		op=k;
+		uint32_t val1=0,val2=0;
+		if(tokens[op].preced<=20)
+		{
+		  val1=eval(l,op-1);
+		  val2=eval(op+1,r);
+		}
+		else
+		{
+      val2=eval(op+1,r);
+		}
 
 		switch(tokens[op].type)
 		{
+			case TK_OR:return val1||val2;
+			case TK_AND:return val1&&val2;
+		  case TK_EQ:return val1==val2;
+		  case TK_NEQ:return val1!=val2;
+		  case TK_L:return val1<val2;
+		  case TK_LE:return val1<=val2;
+		  case TK_G:return val1>val2;
+		  case TK_GE:return val1>=val2;
 			case TK_PLUS:return val1+val2;
 			case TK_MINUS:return val1-val2;
 			case TK_MUL:return val1*val2;
 			case TK_DIV:return val1/val2;
+		  case TK_NOT:return !val2;
+		  case TK_DEREF:
+			{
+				size_t ans=(size_t)val2;
+				return *((uint32_t*)ans);
+			}
 			default:
 				printf("There is no correct operation in debug at line %d\n",__LINE__);
 				assert(0);
@@ -262,6 +360,6 @@ uint32_t expr(char *e, bool *success) {
   }
 
   /* TODO: Insert codes to evaluate the expression. */
-
+  *success=true;
   return eval(1,nr_token);
 }
