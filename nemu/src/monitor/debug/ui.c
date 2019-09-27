@@ -9,6 +9,10 @@
 
 void cpu_exec(uint64_t);
 void isa_reg_display(void);
+void info_w();//Self added
+void wp_d(int);//Selfadded
+void wp_d_all();//Selfadded
+void wp_new(char *, uint32_t);//Selfadded
 
 /* We use the `readline' library to provide more flexibility to read from stdin. */
 static char* rl_gets() {
@@ -63,12 +67,8 @@ static int cmd_info(char *args)
 	if(strcmp(Args,"r")==0)isa_reg_display();
 	else if(strcmp(Args,"w")==0)
 	{
-
+    info_w();    
 	}
-	else
-  {
-
-	}	
   return 0;	
 }
 
@@ -77,12 +77,14 @@ static int cmd_x(char *args)
 	char *Args=strtok(args," ");
   int N=0,len=strlen(Args);
 	uint32_t temp=0,EXPR=0x100000;
-	
+	bool *Success=malloc(sizeof(bool));
 	for(int i=0;i<len;i++)
 	{
 		N=N+(int)Args[i]-(int)('0');
 	}
-  
+
+	Args=strtok(NULL, " ");
+	EXPR=expr(Args, Success);
 	for(int i=1;i<=N;i++)
 	{
     temp=paddr_read(EXPR,4);
@@ -92,7 +94,30 @@ static int cmd_x(char *args)
 
 	return 0;
 }
-
+static int cmd_d(char *args)
+{
+  if(args==NULL)wp_d_all();
+  else 
+	{
+		int len=strlen(args),Number=0;
+		for(int i=0;i<len;i++)
+		Number=Number*10+(int)(args[i]-'0');
+		wp_d(Number);
+	}
+	return 0;
+}
+static int cmd_p(char *args)
+{
+	bool *Success=malloc(sizeof(bool));
+  printf("%u\n", expr(args, Success));
+	return 0;
+}
+static int cmd_w(char *args)
+{
+	bool *Success=malloc(sizeof(bool));
+  wp_new(args, expr(args, Success));
+	return 0;
+}
 
 static int cmd_help(char *args);
 
@@ -106,7 +131,10 @@ static struct {
   { "q", "Exit NEMU", cmd_q },
   {"si", "Run N successive instructions of the programm and then halt, with default N=1. We can add an integer argument N after si", cmd_si },
 	{"info", "Print certain information corresponding to the argument, with 'r'--registers info and 'w'--watchpoint info", cmd_info},
-	{"x", "x N EXPR. Print the information stored at given address denoted by the EXPR 4bytes a time. Print N times/groups", cmd_x}
+	{"x", "x N EXPR. Print the information stored at given address denoted by the EXPR 4bytes a time. Print N times/groups", cmd_x},
+	{"d", "Delete watchpoints", cmd_d},
+	{"p", "Print the value of the following exprssion", cmd_p},
+	{"w", "Set a watchpoint", cmd_w}
  	/* TODO: Add more commands */
 
 };

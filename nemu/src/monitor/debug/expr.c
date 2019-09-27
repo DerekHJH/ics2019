@@ -109,6 +109,7 @@ static bool make_token(char *e) {
          * to record the token in the array `tokens'. For certain types
          * of tokens, some extra actions should be performed.
          */
+         
 
 				//There is no check for over large nr_token
 				if(rules[i].token_type!=TK_NOTYPE)
@@ -219,9 +220,13 @@ static bool make_token(char *e) {
 						case TK_REG:
 						{
 							bool *Success=malloc(sizeof(bool));
+							char temp[4];
+							for(int i=1;i<=3;i++)
+							temp[i-1]=*(substr_start+i);
+							temp[3]='\0';
  			  			tokens[nr_token].type=TK_DIGNUM;
- 			  			tokens[nr_token].num=isa_reg_str2val(substr_start, Success);
- 			  			if(!Success) 
+ 			  			tokens[nr_token].num=isa_reg_str2val(temp, Success);
+ 			  			if(!*Success) 
  			  			{
  			  				printf("Failed to extract value from regesters!!\n");
  			  				assert(0);
@@ -354,7 +359,7 @@ uint32_t eval(int l,int r)
 }
 
 uint32_t expr(char *e, bool *success) {
-  if (!make_token(e)) {
+ 	if (!make_token(e)) {
     *success = false;
     return 0;
   }

@@ -28,7 +28,7 @@ int main(int argc, char *argv[]) {
 	}
 	while(!feof(fp))
 	{
-		Success=fscanf(fp,"%u %s\n",&Result,buf);
+		Success=fscanf(fp,"%u %[^\n]\n",&Result,buf);
 		printf("Read: %u %s\n",Result,buf);
 		printf("Ture result: %u    Calculated result:%u\n",Result,expr(buf,&Success));
 	}
