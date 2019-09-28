@@ -17,7 +17,7 @@ int main(int argc, char *argv[]) {
   ui_mainloop(is_batch_mode);
   
 	//To test the expression. This part can be deleted
-	uint32_t Result=0;
+/*	uint32_t Result=0;
  	char buf[63356];
 	FILE *fp=fopen("/home/hjh/ics2019/nemu/src/tmp/input.txt","r");
   bool Success=true;
@@ -33,7 +33,7 @@ int main(int argc, char *argv[]) {
 		printf("Ture result: %u    Calculated result:%u\n",Result,expr(buf,&Success));
 	}
   fclose(fp);
-
+*/
 
 
 

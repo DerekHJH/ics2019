@@ -350,11 +350,7 @@ uint32_t eval(int l,int r)
 			case TK_MUL:return val1*val2;
 			case TK_DIV:return val1/val2;
 		  case TK_NOT:return !val2;
-		  case TK_DEREF:
-			{
-				size_t ans=(size_t)val2;
-				return *((uint32_t*)ans);
-			}
+		  case TK_DEREF:return paddr_read(val2, 4);
 			default:
 				printf("There is no correct operation in debug at line %d\n",__LINE__);
 				assert(0);
@@ -370,8 +366,7 @@ uint32_t expr(char *e, bool *success) {
     *success = false;
     return 0;
   }
-  for(int i=1;i<=nr_token;i++)
-	if(tokens[i].type==TK_DEREF) printf("fuck!!\n");	
+
   /* TODO: Insert codes to evaluate the expression. */
   *success=true;
   return eval(1,nr_token);
