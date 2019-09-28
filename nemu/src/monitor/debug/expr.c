@@ -172,8 +172,9 @@ static bool make_token(char *e) {
 						case TK_MUL:
 						{
               tokens[nr_token].preced=6;
-              if(nr_token==1||!(tokens[nr_token-1].type>=TK_DIGNUM&&tokens[nr_token-1].type<=TK_REG))
+              if(nr_token==1||!(tokens[nr_token-1].type==TK_RP||tokens[nr_token-1].type==TK_DIGNUM||tokens[nr_token-1].type==TK_REG||tokens[nr_token-1].type==TK_HEXNUM))
 							{
+								printf("%d %u\n",tokens[nr_token-1].type,tokens[nr_token-1].num);
 								tokens[nr_token].type=TK_DEREF;
 								tokens[nr_token].preced=21;
 							}
@@ -290,12 +291,18 @@ uint32_t eval(int l,int r)
 		return eval(l+1,r-1);
 	}
 	else
-	{
+	{	
     int op=0,k=r,Min=10000;
     for(op=r;op>=l;op--)
 			if(tokens[op].type==TK_RP)
 			{
-				while(tokens[op].type!=TK_LP&&op>=l)op--;
+				int cnt=1;
+				do
+				{
+					op--;
+					if(tokens[op].type==TK_LP)cnt--;
+					else if(tokens[op].type==TK_RP)cnt++;
+				}while(op>=l&&cnt>0);
 				if(op<l)
 				{
         	printf("Unmathched right parenthesis!!\n");
@@ -363,7 +370,8 @@ uint32_t expr(char *e, bool *success) {
     *success = false;
     return 0;
   }
-
+  for(int i=1;i<=nr_token;i++)
+	if(tokens[i].type==TK_DEREF) printf("fuck!!\n");	
   /* TODO: Insert codes to evaluate the expression. */
   *success=true;
   return eval(1,nr_token);

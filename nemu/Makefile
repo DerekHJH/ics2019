@@ -1,3 +1,6 @@
+include hjhMakefile
+
+
 NAME = nemu
 
 ifneq ($(MAKECMDGOALS),clean) # ignore check for make clean

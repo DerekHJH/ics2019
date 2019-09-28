@@ -12,7 +12,7 @@ char *get_expr(int Depth)
 {
 	char *temp1=(char *)malloc(65536);
 	char *ans=(char *)malloc(65536);
-	if(Depth>3)
+	if(Depth>4)
 	{
 		sprintf(ans,"%d",rand()%500);
 		return ans;
