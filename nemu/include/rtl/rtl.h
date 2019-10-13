@@ -77,14 +77,17 @@ static inline void interpret_rtl_idiv64_r(rtlreg_t* dest,
   *dest = dividend % divisor;
 }
 
+//guest memomry read
 static inline void interpret_rtl_lm(rtlreg_t *dest, const rtlreg_t* addr, int len) {
   *dest = vaddr_read(*addr, len);
 }
 
+//guest memory write
 static inline void interpret_rtl_sm(const rtlreg_t* addr, const rtlreg_t* src1, int len) {
   vaddr_write(*addr, *src1, len);
 }
 
+//host memory read
 static inline void interpret_rtl_host_lm(rtlreg_t* dest, const void *addr, int len) {
   switch (len) {
     case 4: *dest = *(uint32_t *)addr; return;
@@ -94,6 +97,7 @@ static inline void interpret_rtl_host_lm(rtlreg_t* dest, const void *addr, int l
   }
 }
 
+//host memory write
 static inline void interpret_rtl_host_sm(void *addr, const rtlreg_t *src1, int len) {
   switch (len) {
     case 4: *(uint32_t *)addr = *src1; return;
