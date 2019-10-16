@@ -22,6 +22,18 @@ typedef struct {
 #define EX(ex)             EXW(ex, 0)
 #define EMPTY              EX(inv)
 
+//All the functions needed in exec.c
+void exec_call(vaddr_t *);
+
+
+
+
+
+
+
+
+
+
 static inline uint32_t instr_fetch(vaddr_t *pc, int len) {
   uint32_t instr = vaddr_read(*pc, len);
 #ifdef DEBUG
@@ -37,8 +49,9 @@ static inline uint32_t instr_fetch(vaddr_t *pc, int len) {
 }
 
 /* Instruction Decode and EXecute */
-static inline void idex(vaddr_t *pc, OpcodeEntry *e) {
-  if (e->decode)
+static inline void idex(vaddr_t *pc, OpcodeEntry *e) {  
+  printf("hjh%p\n",e->decode);
+	if (e->decode)
     e->decode(pc);
   e->execute(pc);
 }

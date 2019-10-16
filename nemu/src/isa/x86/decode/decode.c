@@ -2,15 +2,19 @@
 
 // decode operand helper
 #define make_DopHelper(name) void concat(decode_op_, name) (vaddr_t *pc, Operand *op, bool load_val)
+//load_val is used to determine if we need to use the global decinfo to record the value.
 
 /* Refer to Appendix A in i386 manual for the explanations of these abbreviations */
 
 /* Ib, Iv */
-static inline make_DopHelper(I) {
+static inline make_DopHelper(I) {   
   /* pc here is pointing to the immediate */
+
+	//printf("pc is 0x%x  and  immediate is hjh0x%x\n",*pc,op->val);
+
   op->type = OP_TYPE_IMM;
   op->imm = instr_fetch(pc, op->width);
-  rtl_li(&op->val, op->imm);
+  rtl_li(&op->val, op->imm); //interpret_rtl_li.
 
   print_Dop(op->str, OP_STR_SIZE, "$0x%x", op->imm);
 }
@@ -28,10 +32,8 @@ static inline make_DopHelper(SI) {
   /* TODO: Use instr_fetch() to read `op->width' bytes of memory
    * pointed by 'pc'. Interpret the result as a signed immediate,
    * and assign it to op->simm.
-   *
-   op->simm = ???
    */
-  TODO();
+  op->simm = (int32_t)instr_fetch(pc, op->width);
 
   rtl_li(&op->val, op->simm);
 
@@ -42,7 +44,7 @@ static inline make_DopHelper(SI) {
  * It is convenient to merge them into a single helper function.
  */
 /* AL/eAX */
-static inline make_DopHelper(a) {
+static inline make_DopHelper(a) { 
   op->type = OP_TYPE_REG;
   op->reg = R_EAX;
   if (load_val) {
@@ -161,6 +163,8 @@ make_DHelper(mov_I2r) {
 
 /* used by unary operations */
 make_DHelper(I) {
+
+//	printf("asxkjhvasjkxnas\n");//To test if we have arrived here
   decode_op_I(pc, id_dest, true);
 }
 
