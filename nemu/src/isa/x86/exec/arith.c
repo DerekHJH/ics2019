@@ -6,9 +6,14 @@ make_EHelper(add) {
   print_asm_template2(add);
 }
 
-make_EHelper(sub) {
-  TODO();
+make_EHelper(sub) 
+{
+	//begin{hjh}
+  rtl_sub(&id_dest->val,&id_dest->val,&id_src->val);
+  operand_write(id_dest,&id_dest->val);
+  
 
+	//end{hjh}
   print_asm_template2(sub);
 }
 

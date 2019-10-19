@@ -14,8 +14,10 @@ make_EHelper(and) {
 }
 
 make_EHelper(xor) {
-  TODO();
+  //begin{hjh}
+	rtl_xor(&id_dest->val,&id_dest->val,&id_src->val);
 
+	//end{hjh}
   print_asm_template2(xor);
 }
 

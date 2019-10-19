@@ -33,7 +33,20 @@ static inline make_DopHelper(SI) {
    * pointed by 'pc'. Interpret the result as a signed immediate,
    * and assign it to op->simm.
    */
-  op->simm = (int32_t)instr_fetch(pc, op->width);
+	switch(op->width)
+	{
+		case 1:
+		{
+			int8_t temp=(int8_t)instr_fetch(pc, op->width);
+			op->simm=(int32_t)temp;
+			break;
+		}
+		case 4:
+		{
+			op->simm=(int32_t)instr_fetch(pc,op->width);
+      break;
+		}
+	}
 
   rtl_li(&op->val, op->simm);
 

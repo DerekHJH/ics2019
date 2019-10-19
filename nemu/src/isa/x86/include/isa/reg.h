@@ -38,8 +38,29 @@ typedef struct
   	};
   };
   vaddr_t pc;
+	//begin{hjh}
+	union
+	{
+		struct 
+		{
+      uint32_t CF:1;
+      uint32_t a1:1;
+      uint32_t PF:1;
+      uint32_t a2:1;
+      uint32_t AF:1;
+      uint32_t a3:1;
+      uint32_t ZF:1;
+      uint32_t SF:1;
+      uint32_t TF:1;
+			uint32_t IF:1;
+      uint32_t DF:1;
+      uint32_t OF:1;
+			uint32_t others:20;
+		};
+    uint32_t val;
+	}eflags;
 	
-	rtlreg_t EFLAGS;//hjh
+	//end{hjh}
 
 } CPU_state;
 

@@ -25,8 +25,8 @@ typedef struct {
 //All the functions needed in exec.c
 void exec_call(vaddr_t *);
 void exec_push(vaddr_t *);
-
-
+void exec_sub(vaddr_t *);
+void exec_xor(vaddr_t *);
 
 
 
