@@ -24,7 +24,7 @@ typedef struct {
 
 //All the functions needed in exec.c
 void exec_call(vaddr_t *);
-
+void exec_push(vaddr_t *);
 
 
 
@@ -50,7 +50,7 @@ static inline uint32_t instr_fetch(vaddr_t *pc, int len) {
 
 /* Instruction Decode and EXecute */
 static inline void idex(vaddr_t *pc, OpcodeEntry *e) {  
-  printf("hjh%p\n",e->decode);
+ // printf("hjh%p\n",e->decode);
 	if (e->decode)
     e->decode(pc);
   e->execute(pc);

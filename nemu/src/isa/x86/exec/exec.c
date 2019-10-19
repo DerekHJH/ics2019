@@ -20,7 +20,7 @@ static make_EHelper(name) { \
 }
 
 /* 0x80, 0x81, 0x83 */
-make_group(gp1,
+make_group(sub,
     EMPTY, EMPTY, EMPTY, EMPTY,
     EMPTY, EMPTY, EMPTY, EMPTY)
 
@@ -73,12 +73,12 @@ static OpcodeEntry opcode_table [512] = {
   /* 0x48 */	EMPTY, EMPTY, EMPTY, EMPTY,
   /* 0x4c */	EMPTY, EMPTY, EMPTY, EMPTY,
   /* 0x50 */	EMPTY, EMPTY, EMPTY, EMPTY,
-  /* 0x54 */	EMPTY, EMPTY, EMPTY, EMPTY,
+  /* 0x54 */	EMPTY, IDEXW(r,push,4), EMPTY, EMPTY,
   /* 0x58 */	EMPTY, EMPTY, EMPTY, EMPTY,
   /* 0x5c */	EMPTY, EMPTY, EMPTY, EMPTY,
   /* 0x60 */	EMPTY, EMPTY, EMPTY, EMPTY,
   /* 0x64 */	EMPTY, EMPTY, EX(operand_size), EMPTY,
-  /* 0x68 */	EMPTY, EMPTY, EMPTY, EMPTY,
+  /* 0x68 */	IDEXW(I,push,4), EMPTY, EMPTY, EMPTY,
   /* 0x6c */	EMPTY, EMPTY, EMPTY, EMPTY,
   /* 0x70 */	EMPTY, EMPTY, EMPTY, EMPTY,
   /* 0x74 */	EMPTY, EMPTY, EMPTY, EMPTY,
@@ -110,7 +110,7 @@ static OpcodeEntry opcode_table [512] = {
   /* 0xdc */	EMPTY, EMPTY, EMPTY, EMPTY,
   /* 0xe0 */	EMPTY, EMPTY, EMPTY, EMPTY,
   /* 0xe4 */	EMPTY, EMPTY, EMPTY, EMPTY,
-  /* 0xe8 */	IDEXW(I,call,4), EMPTY, EMPTY, EMPTY,
+  /* 0xe8 */	IDEXW(J,call,4), EMPTY, EMPTY, EMPTY,
   /* 0xec */	EMPTY, EMPTY, EMPTY, EMPTY,
   /* 0xf0 */	EMPTY, EMPTY, EMPTY, EMPTY,
   /* 0xf4 */	EMPTY, EMPTY, IDEXW(E, gp3, 1), IDEX(E, gp3),
