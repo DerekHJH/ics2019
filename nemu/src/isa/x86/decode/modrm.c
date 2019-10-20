@@ -32,19 +32,23 @@ void load_addr(vaddr_t *pc, ModR_M *m, Operand *rm) {
     /* has disp */
     disp = instr_fetch(pc, disp_size);
     if (disp_size == 1) { disp = (int8_t)disp; }
-
+    //printf("hjh disp is %d\n",disp);
     rtl_addi(&s0, &s0, disp);
   }
 
-  if (base_reg != -1) {
+  if (base_reg != -1) 
+	{
+		//printf("hjh the number of base reg is %d\n", base_reg);
     rtl_add(&s0, &s0, &reg_l(base_reg));
   }
 
-  if (index_reg != -1) {
+  if (index_reg != -1) 
+	{
     rtl_shli(&s1, &reg_l(index_reg), scale);
     rtl_add(&s0, &s0, &s1);
   }
   rtl_mv(&rm->addr, &s0);
+	//printf("hjh the effective address is 0x%x\n",s0);
 
 #ifdef DEBUG
   char disp_buf[16];
@@ -113,6 +117,7 @@ void read_ModR_M(vaddr_t *pc, Operand *rm, bool load_rm_val, Operand *reg, bool 
     load_addr(pc, &m, rm);
     if (load_rm_val) {
       rtl_lm(&rm->val, &rm->addr, rm->width);
+			//printf("rm->val is 0x%x  and rm->addr is 0x%0x   and rm->width is %d\n",rm->val,rm->addr,rm->width);
     }
   }
 }

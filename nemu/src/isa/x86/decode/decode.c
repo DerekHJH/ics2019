@@ -187,6 +187,7 @@ make_DHelper(r) {
 
 make_DHelper(E) {
   decode_op_rm(pc, id_dest, true, NULL, false);
+	//printf("hjh the id_dest->val is %0x\n",id_dest->val);
 }
 
 make_DHelper(setcc_E) {
