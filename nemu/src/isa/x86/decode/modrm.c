@@ -21,7 +21,8 @@ void load_addr(vaddr_t *pc, ModR_M *m, Operand *rm) {
     base_reg = m->R_M;
   }
 
-  if (m->mod == 0) {
+  if (m->mod == 0) 
+	{
     if (base_reg == R_EBP) { base_reg = -1; }
     else { disp_size = 0; }
   }

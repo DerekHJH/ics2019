@@ -53,7 +53,7 @@ static int cmd_si(char *args) {
     
 	  for(int i=0;i<len;i++)
   	{
-    	N=N+(int)Args[i]-(int)('0');
+    	N=10*N+(int)Args[i]-(int)('0');
 	  }
 		cpu_exec(N);
 	}

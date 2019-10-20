@@ -30,6 +30,12 @@ void exec_xor(vaddr_t *);
 void exec_pop(vaddr_t *);
 void exec_ret(vaddr_t *);
 void exec_nop(vaddr_t *);
+void exec_lea(vaddr_t *);
+
+
+
+
+
 
 
 
