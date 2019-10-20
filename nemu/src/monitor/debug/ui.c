@@ -80,7 +80,7 @@ static int cmd_x(char *args)
 	bool *Success=malloc(sizeof(bool));
 	for(int i=0;i<len;i++)
 	{
-		N=N+(int)Args[i]-(int)('0');
+		N=10*N+(int)Args[i]-(int)('0');
 	}
 
 	Args=strtok(NULL, " ");
@@ -109,7 +109,8 @@ static int cmd_d(char *args)
 static int cmd_p(char *args)
 {
 	bool *Success=malloc(sizeof(bool));
-  printf("%u\n", expr(args, Success));
+	uint32_t temp=expr(args, Success);
+  printf("0x%x  %u\n",temp,temp);
 	return 0;
 }
 static int cmd_w(char *args)

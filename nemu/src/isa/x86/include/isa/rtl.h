@@ -26,14 +26,19 @@ static inline void rtl_sr(int r, const rtlreg_t* src1, int width) {
 static inline void rtl_push(const rtlreg_t* src1) {
   // esp <- esp - 4
   // M[esp] <- src1
+	//begin{hjh}
   rtl_subi(&cpu.esp,&cpu.esp,4);
-  vaddr_write(cpu.esp,*src1,4); 
+  rtl_sm(&cpu.esp,src1,4); 
+	//end{hjh}
 }
 
 static inline void rtl_pop(rtlreg_t* dest) {
   // dest <- M[esp]
   // esp <- esp + 4
-  TODO();
+  //begin{hjh}
+	rtl_lm(dest,&cpu.esp,4);
+  rtl_addi(&cpu.esp,&cpu.esp,4);
+	//end{hjh}
 }
 
 static inline void rtl_is_sub_overflow(rtlreg_t* dest,

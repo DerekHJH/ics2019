@@ -27,9 +27,9 @@ void exec_call(vaddr_t *);
 void exec_push(vaddr_t *);
 void exec_sub(vaddr_t *);
 void exec_xor(vaddr_t *);
-
-
-
+void exec_pop(vaddr_t *);
+void exec_ret(vaddr_t *);
+void exec_nop(vaddr_t *);
 
 
 
