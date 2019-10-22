@@ -55,6 +55,7 @@ static int cmd_si(char *args) {
   	{
     	N=10*N+(int)Args[i]-(int)('0');
 	  }
+		//printf("hjh N is %d\n",N);
 		cpu_exec(N);
 	}
 	

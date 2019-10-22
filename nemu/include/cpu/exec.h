@@ -32,8 +32,8 @@ void exec_ret(vaddr_t *);
 void exec_nop(vaddr_t *);
 void exec_lea(vaddr_t *);
 void exec_and(vaddr_t *);
-
-
+make_EHelper(add);
+make_EHelper(cmp);
 
 
 

@@ -45,35 +45,55 @@ static inline void rtl_is_sub_overflow(rtlreg_t* dest,
     const rtlreg_t* res, const rtlreg_t* src1, const rtlreg_t* src2, int width) {
   // dest <- is_overflow(src1 - src2)
   //begin{hjh}
-  	
-
+  rtl_msb(&t0,src1,width);
+  rtl_msb(&t1,src2,width);
+	rtl_msb(dest,res,width);
+	if(t0!=t1&&(*dest)!=t0)(*dest)=1;
+	else (*dest)=0;
 	//end{hjh}
 }
 
 static inline void rtl_is_sub_carry(rtlreg_t* dest,
-    const rtlreg_t* res, const rtlreg_t* src1) {
+    const rtlreg_t* res, const rtlreg_t* src1, const rtlreg_t* src2, int width) {
   // dest <- is_carry(src1 - src2)
-  TODO();
+	uint64_t mask=(1<<(width*8));
+  uint64_t a=(*src1)&(mask-1);
+	uint64_t b=(~(*src2)+1)&(mask-1);
+	uint64_t c=a+b;
+  if(c&mask)(*dest)=0;
+	else (*dest)=1;
+
 }
 
 static inline void rtl_is_add_overflow(rtlreg_t* dest,
     const rtlreg_t* res, const rtlreg_t* src1, const rtlreg_t* src2, int width) {
   // dest <- is_overflow(src1 + src2)
-  TODO();
+	// begin{hjh}
+  rtl_msb(&t0,src1,width);
+  rtl_msb(&t1,src2,width);
+	rtl_msb(dest,res,width);
+	if(t0==t1&&(*dest)!=t0)(*dest)=1;
+	else (*dest)=0;
+	//end{hjh}
 }
 
 static inline void rtl_is_add_carry(rtlreg_t* dest,
-    const rtlreg_t* res, const rtlreg_t* src1) {
+    const rtlreg_t* res, const rtlreg_t* src1, const rtlreg_t* src2, int width) {
   // dest <- is_carry(src1 + src2)
-  TODO();
+  uint64_t mask=(1<<(width*8));
+  uint64_t a=(*src1)&(mask-1);
+  uint64_t b=(*src2)&(mask-1);
+  uint64_t c=a+b;
+  if(c&mask)(*dest)=1;
+	else (*dest)=0;
 }
 
 #define make_rtl_setget_eflags(f) \
   static inline void concat(rtl_set_, f) (const rtlreg_t* src) { \
-    TODO(); \
+    cpu.eflags.f=*src; \
   } \
   static inline void concat(rtl_get_, f) (rtlreg_t* dest) { \
-    TODO(); \
+    *dest=cpu.eflags.f; \
   }
 
 make_rtl_setget_eflags(CF)

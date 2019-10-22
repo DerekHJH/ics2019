@@ -8,7 +8,7 @@ bool wp_check();//Selfadded
  * This is useful when you use the `si' command.
  * You can modify this value as you want.
  */
-#define MAX_INSTR_TO_PRINT 10
+#define MAX_INSTR_TO_PRINT 100
 
 /* restrict the size of log file */
 #define LOG_MAX (1024 * 1024)
