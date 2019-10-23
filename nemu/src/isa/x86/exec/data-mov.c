@@ -32,8 +32,12 @@ make_EHelper(popa) {
   print_asm("popa");
 }
 
-make_EHelper(leave) {
-  TODO();
+make_EHelper(leave) 
+{
+	//begin{hjh}	
+	rtl_mv(&cpu.esp,&cpu.ebp);
+  rtl_pop(&cpu.ebp);
+  //end{hjh}
 
   print_asm("leave");
 }

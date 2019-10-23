@@ -20,13 +20,17 @@ make_EHelper(sub)
 }
 
 make_EHelper(cmp) {
-  rtl_sub(&t0,&id_dest->val,&id_src->val);
-  rtl_update_ZFSF(&t0,id_dest->width);
-  rtl_is_sub_overflow(&t1,&t0,&id_dest->val,&id_src->val,id_dest->width);
-	rtl_set_OF(&t1);
-  rtl_is_sub_carry(&t1,&t0,&id_dest->val,&id_src->val,id_dest->width);
-	rtl_set_CF(&t1);
-	
+  //begin{hjh}
+	rtl_sub(&s0,&id_dest->val,&id_src->val);
+	//printf("the jianshu  is 0x%x, the jianshu is 0x%x and the difference is 0x%x\n",id_dest->val,id_dest->val,s0);
+  rtl_update_ZFSF(&s0,id_dest->width);
+	//printf("the width is %d\n",id_dest->width);
+  rtl_is_sub_overflow(&s1,&s0,&id_dest->val,&id_src->val,id_dest->width);
+	rtl_set_OF(&s1);
+  rtl_is_sub_carry(&s1,&s0,&id_dest->val,&id_src->val,id_dest->width);
+	rtl_set_CF(&s1);
+  //printf("eflags: OF is %u, ZF is %u, SF is %u, CF is %u\n",cpu.eflags.OF,cpu.eflags.ZF,cpu.eflags.SF,cpu.eflags.CF);
+	//end{hjh}
 	print_asm_template2(cmp);
 }
 

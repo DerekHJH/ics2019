@@ -32,7 +32,7 @@ void load_addr(vaddr_t *pc, ModR_M *m, Operand *rm) {
     /* has disp */
     disp = instr_fetch(pc, disp_size);
     if (disp_size == 1) { disp = (int8_t)disp; }
-    //printf("hjh disp is %d\n",disp);
+    //printf("hjh disp is 0x%x\n",disp);
     rtl_addi(&s0, &s0, disp);
   }
 

@@ -80,12 +80,14 @@ static inline void rtl_is_add_overflow(rtlreg_t* dest,
 static inline void rtl_is_add_carry(rtlreg_t* dest,
     const rtlreg_t* res, const rtlreg_t* src1, const rtlreg_t* src2, int width) {
   // dest <- is_carry(src1 + src2)
+	// begin{hjh}
   uint64_t mask=(1<<(width*8));
   uint64_t a=(*src1)&(mask-1);
   uint64_t b=(*src2)&(mask-1);
   uint64_t c=a+b;
   if(c&mask)(*dest)=1;
 	else (*dest)=0;
+	//end{hjh}
 }
 
 #define make_rtl_setget_eflags(f) \
@@ -104,13 +106,17 @@ make_rtl_setget_eflags(SF)
 static inline void rtl_update_ZF(const rtlreg_t* result, int width) {
   // eflags.ZF <- is_zero(result[width * 8 - 1 .. 0])
 	cpu.eflags.ZF=1; //hjh
-  if((*result)&((1u<<(width*8))-1))cpu.eflags.ZF=0; //hjh
+	if(width==4)
+	{
+		if(*result!=0)cpu.eflags.ZF=0;
+	}
+	else if((*result)&((1u<<(width*8))-1))cpu.eflags.ZF=0; //hjh
 }
 
 static inline void rtl_update_SF(const rtlreg_t* result, int width) {
   // eflags.SF <- is_sign(result[width * 8 - 1 .. 0])
   cpu.eflags.SF=0;//hjh
-	if(((*result)>>(width*8))&1)cpu.eflags.SF=1;//hjh
+	if(((*result)>>(width*8-1))&1)cpu.eflags.SF=1;//hjh
 }
 
 static inline void rtl_update_ZFSF(const rtlreg_t* result, int width) {

@@ -2,8 +2,12 @@
 #include "cc.h"
 
 make_EHelper(test) {
-  TODO();
-
+  rtl_and(&id_dest->val,&id_dest->val,&id_src->val);
+	s0=0;
+	rtl_set_OF(&s0);
+	rtl_set_CF(&s0);
+	rtl_update_ZFSF(&id_dest->val,id_dest->width);
+	//printf("eflags: OF is %u, ZF is %u, SF is %u, CF is %u\n",cpu.eflags.OF,cpu.eflags.ZF,cpu.eflags.SF,cpu.eflags.CF);
   print_asm_template2(test);
 }
 

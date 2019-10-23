@@ -34,6 +34,16 @@ void exec_lea(vaddr_t *);
 void exec_and(vaddr_t *);
 make_EHelper(add);
 make_EHelper(cmp);
+make_EHelper(setcc);
+make_EHelper(movzx);
+make_EHelper(test);
+make_EHelper(jcc);
+make_EHelper(leave);
+
+
+
+
+
 
 
 
