@@ -52,11 +52,11 @@ make_group(gp7,
 /* TODO: Add more instructions!!! */
 
 static OpcodeEntry opcode_table [512] = {
-  /* 0x00 */	EMPTY, IDEX(G2E,add), EMPTY, EMPTY,
+  /* 0x00 */	EMPTY, IDEX(G2E,add), EMPTY, IDEX(E2G,add),
   /* 0x04 */	EMPTY, EMPTY, EMPTY, EMPTY,
-  /* 0x08 */	EMPTY, EMPTY, EMPTY, EMPTY,
+  /* 0x08 */	EMPTY, IDEX(E2G,or), EMPTY, EMPTY,
   /* 0x0c */	EMPTY, EMPTY, EMPTY, EX(2byte_esc),
-  /* 0x10 */	EMPTY, EMPTY, EMPTY, EMPTY,
+  /* 0x10 */	EMPTY, EMPTY, EMPTY, IDEX(E2G,adc),
   /* 0x14 */	EMPTY, EMPTY, EMPTY, EMPTY,
   /* 0x18 */	EMPTY, EMPTY, EMPTY, EMPTY,
   /* 0x1c */	EMPTY, EMPTY, EMPTY, EMPTY,
@@ -64,7 +64,7 @@ static OpcodeEntry opcode_table [512] = {
   /* 0x24 */	EMPTY, EMPTY, EMPTY, EMPTY,
   /* 0x28 */	EMPTY, EMPTY, EMPTY, EMPTY,
   /* 0x2c */	EMPTY, EMPTY, EMPTY, EMPTY,
-  /* 0x30 */	EMPTY, IDEX(E2G,xor), EMPTY, EMPTY,
+  /* 0x30 */	EMPTY, IDEX(E2G,xor), EMPTY, IDEX(E2G,xor),
   /* 0x34 */	EMPTY, EMPTY, EMPTY, EMPTY,
   /* 0x38 */	EMPTY, EMPTY, EMPTY, IDEX(E2G,cmp),
   /* 0x3c */	EMPTY, EMPTY, EMPTY, EMPTY,

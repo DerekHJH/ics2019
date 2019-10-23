@@ -7,7 +7,7 @@ make_EHelper(test) {
 	rtl_set_OF(&s0);
 	rtl_set_CF(&s0);
 	rtl_update_ZFSF(&id_dest->val,id_dest->width);
-	//printf("eflags: OF is %u, ZF is %u, SF is %u, CF is %u\n",cpu.eflags.OF,cpu.eflags.ZF,cpu.eflags.SF,cpu.eflags.CF);
+	printf("eflags: OF is %u, ZF is %u, SF is %u, CF is %u\n",cpu.eflags.OF,cpu.eflags.ZF,cpu.eflags.SF,cpu.eflags.CF);
   print_asm_template2(test);
 }
 
@@ -21,14 +21,28 @@ make_EHelper(and) {
 
 make_EHelper(xor) {
   //begin{hjh}
-	rtl_xor(&id_dest->val,&id_dest->val,&id_src->val);
-	operand_write(id_dest,&id_dest->val);
+	rtl_xor(&s0,&id_dest->val,&id_src->val);
+	operand_write(id_dest,&s0);
+	s1=0;
+	rtl_set_OF(&s1);
+	rtl_set_CF(&s1);
+  rtl_update_ZFSF(&s0,id_dest->width);
+	printf("eflags: OF is %u, ZF is %u, SF is %u, CF is %u\n",cpu.eflags.OF,cpu.eflags.ZF,cpu.eflags.SF,cpu.eflags.CF);
 	//end{hjh}
   print_asm_template2(xor);
 }
 
 make_EHelper(or) {
-  TODO();
+  //begin{hjh}
+	rtl_or(&s0,&id_dest->val,&id_src->val);
+	operand_write(id_dest,&s0);
+	s1=0;
+	rtl_set_OF(&s1);
+	rtl_set_CF(&s1);
+  rtl_update_ZFSF(&s0,id_dest->width);
+	printf("eflags: OF is %u, ZF is %u, SF is %u, CF is %u\n",cpu.eflags.OF,cpu.eflags.ZF,cpu.eflags.SF,cpu.eflags.CF);
+	
+	//end{hjh}
 
   print_asm_template2(or);
 }
