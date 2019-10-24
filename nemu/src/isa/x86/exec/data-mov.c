@@ -43,11 +43,17 @@ make_EHelper(leave)
 }
 
 make_EHelper(cltd) {
-  if (decinfo.isa.is_operand_size_16) {
-    TODO();
+  if (decinfo.isa.is_operand_size_16) 
+	{
+    rtl_msb(&s0,&cpu.eax,2);
+	  if(s0)cpu.edx|=0xFFFFu;	
+		else cpu.edx&=0xFFFF0000u;
   }
-  else {
-    TODO();
+  else 
+	{
+    rtl_msb(&s0,&cpu.eax,4);
+	  if(s0)rtl_li(&cpu.edx,0xFFFFFFFFu);	
+		else rtl_li(&cpu.edx,0u);
   }
 
   print_asm(decinfo.isa.is_operand_size_16 ? "cwtl" : "cltd");
