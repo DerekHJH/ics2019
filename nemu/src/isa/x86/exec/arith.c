@@ -80,8 +80,20 @@ make_EHelper(dec)
 }
 
 make_EHelper(neg) {
-  TODO();
+  //begin{hjh}
+  if(id_dest->val==0)s0=0;
+	else s0=1;
+	rtl_set_CF(&s0);
+	if(id_dest->val==0x80000000)s0=1;
+	else s0=0;
+	rtl_set_OF(&s0);
+  rtl_not(&id_dest->val,&id_dest->val);
+  rtl_addi(&s0,&id_dest->val,1);	
+	rtl_update_ZFSF(&s0,id_dest->width);
+	operand_write(id_dest,&s0);
+  printf("eflags: OF is %u, ZF is %u, SF is %u, CF is %u\n",cpu.eflags.OF,cpu.eflags.ZF,cpu.eflags.SF,cpu.eflags.CF);
 
+	//end{hjh}
   print_asm_template1(neg);
 }
 

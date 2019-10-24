@@ -74,6 +74,8 @@ make_EHelper(movsx) {
   id_dest->width = decinfo.isa.is_operand_size_16 ? 2 : 4;
   rtl_sext(&s0, &id_src->val, id_src->width);
   operand_write(id_dest, &s0);
+
+	//printf("the id_dest->width is %d and the id_src->width is %d and the id_dest->val is 0x%x and the id_src->val is 0x%x\n",id_dest->width,id_src->width,id_dest->val,id_src->val);
   print_asm_template2(movsx);
 }
 
