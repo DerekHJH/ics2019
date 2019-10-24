@@ -46,15 +46,36 @@ make_EHelper(cmp) {
 	print_asm_template2(cmp);
 }
 
-make_EHelper(inc) {
-  TODO();
+make_EHelper(inc) 
+{
+  //begin{hjh}
+	rtl_li(&s1,1);
+	rtl_add(&s0,&id_dest->val,&s1);
+	operand_write(id_dest,&s0);
+  rtl_update_ZFSF(&s0,id_dest->width);
+  //printf("the width is %d\n",id_dest->width);
+  rtl_is_add_overflow(&s1,&s0,&id_dest->val,&s1,id_dest->width);
+  rtl_set_OF(&s1);
+  //no carry flag is affected
+  printf("eflags: OF is %u, ZF is %u, SF is %u, CF is %u\n",cpu.eflags.OF,cpu.eflags.ZF,cpu.eflags.SF,cpu.eflags.CF);
 
+	//end{hjh}
   print_asm_template1(inc);
 }
 
-make_EHelper(dec) {
-  TODO();
-
+make_EHelper(dec) 
+{ 
+	//begin{hjh}
+	rtl_li(&s1,1);
+  rtl_sub(&s0,&id_dest->val,&s1);
+  operand_write(id_dest,&s0);
+  rtl_update_ZFSF(&s0,id_dest->width);
+	//printf("the width is %d\n",id_dest->width);
+  rtl_is_sub_overflow(&s1,&s0,&id_dest->val,&s1,id_dest->width);
+	rtl_set_OF(&s1);
+	//no carry flag is affected
+  printf("eflags: OF is %u, ZF is %u, SF is %u, CF is %u\n",cpu.eflags.OF,cpu.eflags.ZF,cpu.eflags.SF,cpu.eflags.CF);
+	//end{hjh}
   print_asm_template1(dec);
 }
 

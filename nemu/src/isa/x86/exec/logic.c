@@ -13,8 +13,13 @@ make_EHelper(test) {
 
 make_EHelper(and) {
   //begin{hjh} 
-  rtl_and(&id_dest->val,&id_dest->val,&id_src->val);
-  operand_write(id_dest,&id_dest->val);	
+  rtl_and(&s0,&id_dest->val,&id_src->val);
+  operand_write(id_dest,&s0);	
+	s1=0;
+	rtl_set_OF(&s1);
+	rtl_set_CF(&s1);
+	rtl_update_ZFSF(&s0,id_dest->width);
+  printf("eflags: OF is %u, ZF is %u, SF is %u, CF is %u\n",cpu.eflags.OF,cpu.eflags.ZF,cpu.eflags.SF,cpu.eflags.CF);
 	//end{hjh}
   print_asm_template2(and);
 }
@@ -93,7 +98,9 @@ make_EHelper(setcc) {
 }
 
 make_EHelper(not) {
-  TODO();
-
+  //begin{hjh}
+  rtl_not(&s0,&id_dest->val);
+  operand_write(id_dest,&s0);
+	//end{hjh}
   print_asm_template1(not);
 }
