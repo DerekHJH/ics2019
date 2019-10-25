@@ -81,10 +81,16 @@ make_EHelper(shl)
   print_asm_template2(shl);
 }
 
-make_EHelper(shr) {
-  TODO();
+make_EHelper(shr) 
+{  
   // unnecessary to update CF and OF in NEMU
-
+  //begin{hjh}
+  id_src->val&=0x1F;
+  s0=(id_dest->val)>>(id_src->val);
+  operand_write(id_dest,&s0);
+  rtl_update_ZFSF(&s0,id_dest->width);
+  printf("eflags: OF is %u, ZF is %u, SF is %u, CF is %u\n",cpu.eflags.OF,cpu.eflags.ZF,cpu.eflags.SF,cpu.eflags.CF);
+	//end{hjh}
   print_asm_template2(shr);
 }
 

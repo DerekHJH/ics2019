@@ -134,30 +134,34 @@ make_EHelper(adc) {
 }
 
 make_EHelper(sbb) {
-/*  // s0 = dest - src
+  // s0 = dest - src
   rtl_sub(&s0, &id_dest->val, &id_src->val);
   // s1 = s0 - CF
-  rtl_get_CF(&s1);
-  rtl_sub(&s1, &s0, &s1);
+  rtl_get_CF(&s2);
+  rtl_sub(&s1, &s0, &s2);
 
   operand_write(id_dest, &s1);
 
-  if (id_dest->width != 4) {
+ /* if (id_dest->width != 4) {
     rtl_andi(&s1, &s1, 0xffffffffu >> ((4 - id_dest->width) * 8));
-  }
+  }*/
 
   rtl_update_ZFSF(&s1, id_dest->width);
 
   // update CF
-  rtl_is_sub_carry(&s1, &s1, &s0);
-  rtl_is_sub_carry(&s0, &s0, &id_dest->val);
-  rtl_or(&s0, &s0, &s1);
-  rtl_set_CF(&s0);
+  rtl_is_sub_carry(&s3,&s0,&id_dest->val,&id_src->val,id_dest->width);
+  rtl_is_sub_carry(&s4,&s1,&s0,&s2,id_dest->width);
+  rtl_or(&s3, &s3, &s4);
+  rtl_set_CF(&s3);
 
   // update OF
-  rtl_is_sub_overflow(&s0, &s1, &id_dest->val, &id_src->val, id_dest->width);
-  rtl_set_OF(&s0);
-*/
+  rtl_is_sub_overflow(&s3, &s0, &id_dest->val, &id_src->val, id_dest->width);
+  rtl_is_sub_overflow(&s4, &s1, &s0, &s2, id_dest->width);
+  rtl_or(&s3, &s3, &s4);
+	rtl_set_OF(&s3);
+
+  printf("eflags: OF is %u, ZF is %u, SF is %u, CF is %u\n",cpu.eflags.OF,cpu.eflags.ZF,cpu.eflags.SF,cpu.eflags.CF);
+  //end{hjh}  
   print_asm_template2(sbb);
 }
 

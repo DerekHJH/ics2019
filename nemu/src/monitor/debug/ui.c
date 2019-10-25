@@ -110,8 +110,8 @@ static int cmd_d(char *args)
 static int cmd_p(char *args)
 {
 	bool *Success=malloc(sizeof(bool));
-	uint32_t temp=expr(args, Success);
-  printf("0x%x  %u\n",temp,temp);
+	uint64_t temp=expr(args, Success);
+  printf("0x%lx  %lu\n",temp,temp);
 	return 0;
 }
 static int cmd_w(char *args)
