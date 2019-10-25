@@ -33,6 +33,7 @@ static inline make_DopHelper(SI) {
    * pointed by 'pc'. Interpret the result as a signed immediate,
    * and assign it to op->simm.
    */
+	//begin{hjh}
 	switch(op->width)
 	{
 		case 1:
@@ -47,7 +48,7 @@ static inline make_DopHelper(SI) {
       break;
 		}
 	}
-
+  //end{hjh}
   rtl_li(&op->val, op->simm);
 
   print_Dop(op->str, OP_STR_SIZE, "$0x%x", op->simm);
