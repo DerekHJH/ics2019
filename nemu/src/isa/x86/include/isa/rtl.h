@@ -60,8 +60,9 @@ static inline void rtl_is_sub_carry(rtlreg_t* dest,
   uint64_t a=(*src1)&(mask-1);
 	uint64_t b=(~(*src2)+1)&(mask-1);
 	uint64_t c=a+b;
-  if(c&mask)(*dest)=1;
-	else (*dest)=0;
+  if(c&mask)(*dest)=0;
+	else (*dest)=1;
+	if(b==0)(*dest)=0;
   printf("a is 0x%lx, b is 0x%lx, and c is 0x%lx, and width is %d\n",a,b,c,width);
 
 }
