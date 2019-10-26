@@ -22,34 +22,6 @@ typedef struct {
 #define EX(ex)             EXW(ex, 0)
 #define EMPTY              EX(inv)
 
-//All the functions needed in exec.c
-void exec_call(vaddr_t *);
-void exec_push(vaddr_t *);
-void exec_sub(vaddr_t *);
-void exec_xor(vaddr_t *);
-void exec_pop(vaddr_t *);
-void exec_ret(vaddr_t *);
-void exec_nop(vaddr_t *);
-void exec_lea(vaddr_t *);
-void exec_and(vaddr_t *);
-make_EHelper(add);
-make_EHelper(cmp);
-make_EHelper(setcc);
-make_EHelper(movzx);
-make_EHelper(test);
-make_EHelper(jcc);
-make_EHelper(leave);
-make_EHelper(adc);
-make_EHelper(or);
-
-
-
-
-
-
-
-
-
 static inline uint32_t instr_fetch(vaddr_t *pc, int len) {
   uint32_t instr = vaddr_read(*pc, len);
 #ifdef DEBUG
