@@ -2,7 +2,6 @@
 #include <stdarg.h>
 
 #if !defined(__ISA_NATIVE__) || defined(__NATIVE_USE_KLIB__)
-
 int tag[128]=
 {
 /*0x00*/	0,0,0,0,

@@ -4,13 +4,13 @@
 
 #define IO_SPACE_MAX (1024 * 1024)
 
-static uint8_t io_space[IO_SPACE_MAX] PG_ALIGN = {};
+static uint8_t io_space[IO_SPACE_MAX] PG_ALIGN = {};//4096 bytes aligned
 static uint8_t *p_space = io_space;
-
+//size means the required room for the new space
 uint8_t* new_space(int size) {
   uint8_t *p = p_space;
   // page aligned;
-  size = (size + (PAGE_SIZE - 1)) & ~PAGE_MASK;
+  size = (size + (PAGE_SIZE - 1)) & ~PAGE_MASK;//reach the nearest aligned place upward
   p_space += size;
   assert(p_space - io_space < IO_SPACE_MAX);
   return p;
