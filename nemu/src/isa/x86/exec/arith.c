@@ -10,7 +10,7 @@ make_EHelper(add) {
 	rtl_set_OF(&s1);
   rtl_is_add_carry(&s1,&s0,&id_dest->val,&id_src->val,id_dest->width);
 	rtl_set_CF(&s1);
-  printf("eflags: OF is %u, ZF is %u, SF is %u, CF is %u\n",cpu.eflags.OF,cpu.eflags.ZF,cpu.eflags.SF,cpu.eflags.CF);
+//  printf("eflags: OF is %u, ZF is %u, SF is %u, CF is %u\n",cpu.eflags.OF,cpu.eflags.ZF,cpu.eflags.SF,cpu.eflags.CF);
   //end{hjh}
   print_asm_template2(add);
 }
@@ -26,7 +26,7 @@ make_EHelper(sub)
 	rtl_set_OF(&s1);
   rtl_is_sub_carry(&s1,&s0,&id_dest->val,&id_src->val,id_dest->width);
 	rtl_set_CF(&s1);
-  printf("eflags: OF is %u, ZF is %u, SF is %u, CF is %u\n",cpu.eflags.OF,cpu.eflags.ZF,cpu.eflags.SF,cpu.eflags.CF);
+ // printf("eflags: OF is %u, ZF is %u, SF is %u, CF is %u\n",cpu.eflags.OF,cpu.eflags.ZF,cpu.eflags.SF,cpu.eflags.CF);
 	//end{hjh}
   print_asm_template2(sub);
 }
@@ -41,7 +41,7 @@ make_EHelper(cmp) {
 	rtl_set_OF(&s1);
   rtl_is_sub_carry(&s1,&s0,&id_dest->val,&id_src->val,id_dest->width);
 	rtl_set_CF(&s1);
-  printf("eflags: OF is %u, ZF is %u, SF is %u, CF is %u\n",cpu.eflags.OF,cpu.eflags.ZF,cpu.eflags.SF,cpu.eflags.CF);
+//  printf("eflags: OF is %u, ZF is %u, SF is %u, CF is %u\n",cpu.eflags.OF,cpu.eflags.ZF,cpu.eflags.SF,cpu.eflags.CF);
 	//end{hjh}
 	print_asm_template2(cmp);
 }
@@ -57,7 +57,7 @@ make_EHelper(inc)
   rtl_is_add_overflow(&s1,&s0,&id_dest->val,&s1,id_dest->width);
   rtl_set_OF(&s1);
   //no carry flag is affected
-  printf("eflags: OF is %u, ZF is %u, SF is %u, CF is %u\n",cpu.eflags.OF,cpu.eflags.ZF,cpu.eflags.SF,cpu.eflags.CF);
+  //printf("eflags: OF is %u, ZF is %u, SF is %u, CF is %u\n",cpu.eflags.OF,cpu.eflags.ZF,cpu.eflags.SF,cpu.eflags.CF);
 
 	//end{hjh}
   print_asm_template1(inc);
@@ -74,7 +74,7 @@ make_EHelper(dec)
   rtl_is_sub_overflow(&s1,&s0,&id_dest->val,&s1,id_dest->width);
 	rtl_set_OF(&s1);
 	//no carry flag is affected
-  printf("eflags: OF is %u, ZF is %u, SF is %u, CF is %u\n",cpu.eflags.OF,cpu.eflags.ZF,cpu.eflags.SF,cpu.eflags.CF);
+ // printf("eflags: OF is %u, ZF is %u, SF is %u, CF is %u\n",cpu.eflags.OF,cpu.eflags.ZF,cpu.eflags.SF,cpu.eflags.CF);
 	//end{hjh}
   print_asm_template1(dec);
 }
@@ -91,7 +91,7 @@ make_EHelper(neg) {
   rtl_addi(&s0,&id_dest->val,1);	
 	rtl_update_ZFSF(&s0,id_dest->width);
 	operand_write(id_dest,&s0);
-  printf("eflags: OF is %u, ZF is %u, SF is %u, CF is %u\n",cpu.eflags.OF,cpu.eflags.ZF,cpu.eflags.SF,cpu.eflags.CF);
+  //printf("eflags: OF is %u, ZF is %u, SF is %u, CF is %u\n",cpu.eflags.OF,cpu.eflags.ZF,cpu.eflags.SF,cpu.eflags.CF);
 
 	//end{hjh}
   print_asm_template1(neg);
@@ -105,7 +105,7 @@ make_EHelper(adc) {
   rtl_get_CF(&s2);
   rtl_add(&s1, &s0, &s2);
 
-  printf("Previously CF is %u\n",s2);
+  //printf("Previously CF is %u\n",s2);
 
   operand_write(id_dest, &s1);
 
@@ -128,7 +128,7 @@ make_EHelper(adc) {
   rtl_or(&s3, &s3, &s4);
 	rtl_set_OF(&s3);
 
-  printf("eflags: OF is %u, ZF is %u, SF is %u, CF is %u\n",cpu.eflags.OF,cpu.eflags.ZF,cpu.eflags.SF,cpu.eflags.CF);
+ // printf("eflags: OF is %u, ZF is %u, SF is %u, CF is %u\n",cpu.eflags.OF,cpu.eflags.ZF,cpu.eflags.SF,cpu.eflags.CF);
   //end{hjh}
   print_asm_template2(adc);
 }
@@ -160,7 +160,7 @@ make_EHelper(sbb) {
   rtl_or(&s3, &s3, &s4);
 	rtl_set_OF(&s3);
 
-  printf("eflags: OF is %u, ZF is %u, SF is %u, CF is %u\n",cpu.eflags.OF,cpu.eflags.ZF,cpu.eflags.SF,cpu.eflags.CF);
+  //printf("eflags: OF is %u, ZF is %u, SF is %u, CF is %u\n",cpu.eflags.OF,cpu.eflags.ZF,cpu.eflags.SF,cpu.eflags.CF);
   //end{hjh}  
   print_asm_template2(sbb);
 }

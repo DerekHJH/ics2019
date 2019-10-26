@@ -2,6 +2,9 @@
 #include <stdarg.h>
 
 #if !defined(__ISA_NATIVE__) || defined(__NATIVE_USE_KLIB__)
+
+#define Max_fmt 1024
+
 int tag[128]=
 {
 /*0x00*/	0,0,0,0,
@@ -46,8 +49,15 @@ int tag[128]=
 
 int printf(const char *fmt, ...) 
 {
-	printf("this fuction does not seem to be realized in stdio.c\n");
-  return 0;
+  char buffer[Max_fmt]={'\0'};
+ 	int len=0;
+  va_list ap;
+  va_start(ap,fmt);
+ 	len=vsprintf(buffer,fmt,ap);
+ 	va_end(ap);
+	for(int i=0;i<len;i++)
+		_putc(buffer[i]);
+  return len;
 }
 
 int vsprintf(char *out, const char *fmt, va_list ap) 
@@ -63,7 +73,7 @@ int vsprintf(char *out, const char *fmt, va_list ap)
       len++;
 		}
 		int l=0,tempd=0;//if it is an integer;
-		char tempc[128]={'\0'};//temporary string;
+		char tempc[Max_fmt]={'\0'};//temporary string;
 		char *temps=NULL;//if it is a string
 		int p=0;//used to traverse tempc;
 		while(*(fmt+l)!='\0'&&((int)(*(fmt+l))>127||tag[(int)(*(fmt+l))]!=1))l++;//*(fmt+l)=the spefifier
@@ -113,14 +123,13 @@ int sprintf(char *out, const char *fmt, ...)
 	int len=0;
   va_list ap;
   va_start(ap,fmt);
-	vsprintf(out,fmt,ap);
+	len=vsprintf(out,fmt,ap);
 	va_end(ap);
   return len;
 }
 
 int snprintf(char *out, size_t n, const char *fmt, ...) 
 {
-	printf("this fuction does not seem to be realized in stdio.c\n");
   return 0;
 }
 

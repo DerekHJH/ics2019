@@ -7,7 +7,7 @@ make_EHelper(test) {
 	rtl_set_OF(&s1);
 	rtl_set_CF(&s1);
 	rtl_update_ZFSF(&s0,id_dest->width);
-	printf("eflags: OF is %u, ZF is %u, SF is %u, CF is %u\n",cpu.eflags.OF,cpu.eflags.ZF,cpu.eflags.SF,cpu.eflags.CF);
+//	printf("eflags: OF is %u, ZF is %u, SF is %u, CF is %u\n",cpu.eflags.OF,cpu.eflags.ZF,cpu.eflags.SF,cpu.eflags.CF);
   print_asm_template2(test);
 }
 
@@ -19,7 +19,7 @@ make_EHelper(and) {
 	rtl_set_OF(&s1);
 	rtl_set_CF(&s1);
 	rtl_update_ZFSF(&s0,id_dest->width);
-  printf("eflags: OF is %u, ZF is %u, SF is %u, CF is %u\n",cpu.eflags.OF,cpu.eflags.ZF,cpu.eflags.SF,cpu.eflags.CF);
+ // printf("eflags: OF is %u, ZF is %u, SF is %u, CF is %u\n",cpu.eflags.OF,cpu.eflags.ZF,cpu.eflags.SF,cpu.eflags.CF);
 	//end{hjh}
   print_asm_template2(and);
 }
@@ -32,7 +32,7 @@ make_EHelper(xor) {
 	rtl_set_OF(&s1);
 	rtl_set_CF(&s1);
   rtl_update_ZFSF(&s0,id_dest->width);
-	printf("eflags: OF is %u, ZF is %u, SF is %u, CF is %u\n",cpu.eflags.OF,cpu.eflags.ZF,cpu.eflags.SF,cpu.eflags.CF);
+//	printf("eflags: OF is %u, ZF is %u, SF is %u, CF is %u\n",cpu.eflags.OF,cpu.eflags.ZF,cpu.eflags.SF,cpu.eflags.CF);
 	//end{hjh}
   print_asm_template2(xor);
 }
@@ -45,7 +45,7 @@ make_EHelper(or) {
 	rtl_set_OF(&s1);
 	rtl_set_CF(&s1);
   rtl_update_ZFSF(&s0,id_dest->width);
-	printf("eflags: OF is %u, ZF is %u, SF is %u, CF is %u\n",cpu.eflags.OF,cpu.eflags.ZF,cpu.eflags.SF,cpu.eflags.CF);
+//	printf("eflags: OF is %u, ZF is %u, SF is %u, CF is %u\n",cpu.eflags.OF,cpu.eflags.ZF,cpu.eflags.SF,cpu.eflags.CF);
 	
 	//end{hjh}
 
@@ -61,7 +61,7 @@ make_EHelper(sar)
 	operand_write(id_dest,&s0);
   rtl_update_ZFSF(&s0,id_dest->width);
   // unnecessary to update CF and OF in NEMU
-	printf("eflags: OF is %u, ZF is %u, SF is %u, CF is %u\n",cpu.eflags.OF,cpu.eflags.ZF,cpu.eflags.SF,cpu.eflags.CF);
+	//printf("eflags: OF is %u, ZF is %u, SF is %u, CF is %u\n",cpu.eflags.OF,cpu.eflags.ZF,cpu.eflags.SF,cpu.eflags.CF);
   //end{hjh}
 
 
@@ -76,7 +76,7 @@ make_EHelper(shl)
 	operand_write(id_dest,&s0);
 	rtl_update_ZFSF(&s0,id_dest->width);
   // unnecessary to update CF and OF in NEMU
-  printf("eflags: OF is %u, ZF is %u, SF is %u, CF is %u\n",cpu.eflags.OF,cpu.eflags.ZF,cpu.eflags.SF,cpu.eflags.CF);
+ // printf("eflags: OF is %u, ZF is %u, SF is %u, CF is %u\n",cpu.eflags.OF,cpu.eflags.ZF,cpu.eflags.SF,cpu.eflags.CF);
   //end{hjh}
   print_asm_template2(shl);
 }
@@ -89,7 +89,7 @@ make_EHelper(shr)
   s0=(id_dest->val)>>(id_src->val);
   operand_write(id_dest,&s0);
   rtl_update_ZFSF(&s0,id_dest->width);
-  printf("eflags: OF is %u, ZF is %u, SF is %u, CF is %u\n",cpu.eflags.OF,cpu.eflags.ZF,cpu.eflags.SF,cpu.eflags.CF);
+ // printf("eflags: OF is %u, ZF is %u, SF is %u, CF is %u\n",cpu.eflags.OF,cpu.eflags.ZF,cpu.eflags.SF,cpu.eflags.CF);
 	//end{hjh}
   print_asm_template2(shr);
 }
