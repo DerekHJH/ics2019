@@ -15,6 +15,7 @@ int main(int argc, char *argv[]) {
 
 	is_batch_mode=false;
   /* Receive commands from user. */
+	//printf("tell me what us is_batch_mode %d\n",is_batch_mode);
   ui_mainloop(is_batch_mode);
   
 	//To test the expression. This part can be deleted
