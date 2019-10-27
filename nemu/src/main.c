@@ -17,7 +17,11 @@ int main(int argc, char *argv[]) {
   /* Receive commands from user. */
 	//printf("tell me what us is_batch_mode %d\n",is_batch_mode);
   ui_mainloop(is_batch_mode);
-  
+
+
+
+
+
 	//To test the expression. This part can be deleted
 /*	uint32_t Result=0;
  	char buf[63356];
@@ -36,10 +40,6 @@ int main(int argc, char *argv[]) {
 	}
   fclose(fp);
 */
-
-
-
-
 
   return 0;
 }

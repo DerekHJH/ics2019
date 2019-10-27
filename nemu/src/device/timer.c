@@ -19,8 +19,8 @@ void rtc_io_handler(uint32_t offset, int len, bool is_write) {
   if (!is_write) {
     struct timeval now;
     gettimeofday(&now, NULL);
-    uint32_t seconds = now.tv_sec;
-    uint32_t useconds = now.tv_usec;
+    uint32_t seconds = now.tv_sec;//signed seconds, long
+    uint32_t useconds = now.tv_usec;//signed microseconds, long
     rtc_port_base[0] = seconds * 1000 + (useconds + 500) / 1000;
   }
 }

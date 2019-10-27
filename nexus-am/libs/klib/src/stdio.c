@@ -4,7 +4,6 @@
 #if !defined(__ISA_NATIVE__) || defined(__NATIVE_USE_KLIB__)
 
 #define Max_fmt 1024
-
 int tag[128]=
 {
 /*0x00*/	0,0,0,0,
@@ -43,10 +42,8 @@ int tag[128]=
 };
 //0 stands for symbols not defined
 //1 stands for specifiers
-//2 stands for
-
-
-
+//2 stands for 
+ 
 int printf(const char *fmt, ...) 
 {
   char buffer[Max_fmt]={'\0'};
@@ -72,45 +69,76 @@ int vsprintf(char *out, const char *fmt, va_list ap)
 			fmt++;
       len++;
 		}
-		int l=0,tempd=0;//if it is an integer;
-		char tempc[Max_fmt]={'\0'};//temporary string;
-		char *temps=NULL;//if it is a string
-		int p=0;//used to traverse tempc;
+		if(*(fmt)=='\0')break;
+		int l=0;
 		while(*(fmt+l)!='\0'&&((int)(*(fmt+l))>127||tag[(int)(*(fmt+l))]!=1))l++;//*(fmt+l)=the spefifier
-    switch(*(fmt+l))
-		{
+    //////////////////////////////////////////////////////////////////
+    switch (*(fmt+l))
+    {
+    	case 'c':
+    	{
+				char temp;
+        temp=(char)va_arg(ap,int);
+        *(out+len)=temp;
+        len++;				
+    	}
+    	case 's':
+    	{
+				char * temp=NULL;
+        temp=va_arg(ap,char*);
+    		while(*temp!='\0')
+    		{
+    			*(out+len)=*temp;
+    			temp++;
+    			len++;
+    		}
+        break;
+    	}
 			case 'd':
-			{ 
-        tempd=va_arg(ap,int);
-        for(p=0;tempd>0;p++)
-				{
-					tempc[p]=(char)(tempd%10+'0');
-					tempd/=10;
-				}				
-				p--;
-				while(p>=0)
-				{
-					*(out+len)=tempc[p];
-					p--;
-					len++;
-				}
-        break;
-			}
-			case 's':
 			{
-				p=0;
-        temps=va_arg(ap,char*);
-				while(temps[p]!='\0')
+				char buffer[Max_fmt];
+				int lbuffer=0;
+				int ZE=0;
+				int width=0;
+				long long temp=0;
+        if(*(fmt+l-1)=='l')temp=va_arg(ap,long long);
+				else temp=va_arg(ap,int);
+				for(int i=1;i<l;i++)
 				{
-					*(out+len)=temps[p];
-					p++;
+					if(*(fmt+i)=='0')ZE=1;
+					width=width*10+(*(fmt+i))-'0';
+				}
+        while(temp)
+				{
+					buffer[lbuffer++]=temp%10+'0';
+					temp/=10;
+				}
+        while(lbuffer<width)
+				{
+					if(ZE==1)buffer[lbuffer++]='0';
+					else buffer[lbuffer++]=' ';
+				}
+				lbuffer--;
+				while(lbuffer>=0)
+				{
+					*(out+len)=buffer[lbuffer];
 					len++;
+					lbuffer--;
 				}
         break;
 			}
-		}
-    if(*(fmt+l)!='\0')fmt+=l+1;
-		else break;
+			case 'x':
+			{
+        break;
+			}
+			case 'p':
+			{
+				break;
+			}
+    }
+
+		/////////////////////////////////////////////////////////////////////
+		fmt+=l+1;
 	}
 	*(out+len)='\0';
 	len++;
