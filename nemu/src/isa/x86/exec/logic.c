@@ -1,6 +1,34 @@
 #include "cpu/exec.h"
 #include "cc.h"
 
+make_EHelper(rol)
+{
+  //begin{hjh}
+  s0=id_src->val&0x1F;
+  while(s0!=0)
+	{
+		s1=id_dest->val&1u;
+		rtl_shri(&id_dest->val,&id_dest->val,1);
+		if(s1==1)
+		{
+      id_dest->val|=(1u<<(id_dest->width*8-1));
+		}
+    s0--;
+	}	
+  rtl_set_CF(&s1);
+	if(id_src->val==1)
+	{
+		s1=s1^((id_dest->val>>(id_dest->width*8-2))&0x1);
+	}
+	rtl_set_OF(&s1);
+	operand_write(id_dest,&id_dest->val);
+	//printf("eflags: OF is %u, ZF is %u, SF is %u, CF is %u\n",cpu.eflags.OF,cpu.eflags.ZF,cpu.eflags.SF,cpu.eflags.CF);
+  
+  print_asm_template2(rol);
+	//end{hjh}
+}
+
+
 make_EHelper(test) {
   rtl_and(&s0,&id_dest->val,&id_src->val);
 	s1=0;

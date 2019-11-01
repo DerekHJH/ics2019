@@ -28,5 +28,7 @@ size_t __am_video_write(uintptr_t reg, void *buf, size_t size) {
   return 0;
 }
 
-void __am_vga_init() {
+void __am_vga_init() 
+{
+
 }

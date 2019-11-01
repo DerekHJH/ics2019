@@ -5,16 +5,16 @@ NAME = nemu
 
 ifneq ($(MAKECMDGOALS),clean) # ignore check for make clean
 ISA ?= x86
-ISAS = $(shell ls src/isa/)
-$(info Building $(ISA)-$(NAME))
+ISAS = $(shell ls src/isa/)        #hjh ISAS=mips32 riscv32 x86
+$(info Building $(ISA)-$(NAME))    #hjh printf("Building x86-nemu");$(...) is empty 
 
 ifeq ($(filter $(ISAS), $(ISA)), ) # ISA must be valid
 $(error Invalid ISA. Supported: $(ISAS))
 endif
 endif
 
-INC_DIR += ./include ./src/isa/$(ISA)/include
-BUILD_DIR ?= ./build
+INC_DIR += ./include ./src/isa/$(ISA)/include #hjh two include directories
+BUILD_DIR ?= ./build #hjh one build directory
 
 ifdef SHARE
 SO = -so
