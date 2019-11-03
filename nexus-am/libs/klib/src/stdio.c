@@ -96,7 +96,11 @@ int vsprintf(char *out, const char *fmt, va_list ap)
         break;
     	}
 			case 'd':
+			case 'x':
 			{
+				int Scale=0;
+				if(*(fmt+l)=='d')Scale=10;
+				else if(*(fmt+l)=='x')Scale=16;
 				char buffer[Max_fmt];
 				int lbuffer=0;
 				int ZE=0;
@@ -111,8 +115,10 @@ int vsprintf(char *out, const char *fmt, va_list ap)
 				}
         while(temp)
 				{
-					buffer[lbuffer++]=temp%10+'0';
-					temp/=10;
+					long long tt=temp%Scale;
+					if(tt<10)buffer[lbuffer++]=tt+'0';
+					else buffer[lbuffer++]=tt-10+'a';
+					temp/=Scale;
 				}
         while(lbuffer<width)
 				{
@@ -126,10 +132,6 @@ int vsprintf(char *out, const char *fmt, va_list ap)
 					len++;
 					lbuffer--;
 				}
-        break;
-			}
-			case 'x':
-			{
         break;
 			}
 			case 'p':
