@@ -73,7 +73,7 @@ int vsprintf(char *out, const char *fmt, va_list ap)
 		int l=0;
 		while(*(fmt+l)!='\0'&&((int)(*(fmt+l))>127||tag[(int)(*(fmt+l))]!=1))l++;//*(fmt+l)=the spefifier
     //////////////////////////////////////////////////////////////////
-    switch (*(fmt+l))
+    switch (*(fmt+l))//fmt+0---fmt+l, this whole range of length l+1;
     {
     	case 'c':
     	{
@@ -97,16 +97,18 @@ int vsprintf(char *out, const char *fmt, va_list ap)
     	}
 			case 'd':
 			case 'x':
+			case 'p':
 			{
 				int Scale=0;
 				if(*(fmt+l)=='d')Scale=10;
-				else if(*(fmt+l)=='x')Scale=16;
+				else if(*(fmt+l)=='x'||*(fmt+l)=='p')Scale=16;
 				char buffer[Max_fmt];
 				int lbuffer=0;
 				int ZE=0;
 				int width=0;
 				long long temp=0;
-        if(*(fmt+l-1)=='l')temp=va_arg(ap,long long);
+        if(*(fmt+l)=='p')temp=va_arg(ap,uint32_t);
+				else if(*(fmt+l-1)=='l')temp=va_arg(ap,long long);
 				else temp=va_arg(ap,int);
 				for(int i=1;i<l;i++)
 				{
@@ -134,17 +136,12 @@ int vsprintf(char *out, const char *fmt, va_list ap)
 				}
         break;
 			}
-			case 'p':
-			{
-				break;
-			}
     }
 
 		/////////////////////////////////////////////////////////////////////
 		fmt+=l+1;
 	}
 	*(out+len)='\0';
-	len++;
   //end{hjh}
 	return len;
 }
