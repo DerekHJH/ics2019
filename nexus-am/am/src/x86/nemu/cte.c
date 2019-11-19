@@ -26,7 +26,7 @@ _Context* __am_irq_handle(_Context *c) {
 }
 
 int _cte_init(_Context*(*handler)(_Event, _Context*)) {
-  static GateDesc idt[NR_IRQ];
+  static GateDesc idt[NR_IRQ];//NR_IRQ number of interrupt request
 
   // initialize IDT
   for (unsigned int i = 0; i < NR_IRQ; i ++) {

@@ -59,7 +59,13 @@ typedef struct
 		};
     uint32_t val;
 	}eflags;
-	
+  
+	uint16_t cs;
+  struct 
+	{
+		uint32_t base;
+		uint16_t limit;
+	}IDTR;
 	//end{hjh}
 
 } CPU_state;
