@@ -22,6 +22,7 @@ make_EHelper(pop)
 
 make_EHelper(pusha) 
 {
+	//begin{hjh}
   if(decinfo.isa.is_operand_size_16)
 	{
 		s0=reg_w(R_ESP),s1=0;
@@ -48,13 +49,30 @@ make_EHelper(pusha)
 			}
 		}
 	}
-
+  //end{hjh}
   print_asm("pusha");
 }
 
-make_EHelper(popa) {
-  TODO();
-
+make_EHelper(popa) 
+{
+	//begin{hjh}
+  if(decinfo.isa.is_operand_size_16)
+	{
+    for(int i=R_EDI;i>=R_EAX;i--)
+		{
+			rtl_pop(&s0);
+      if(i!=R_ESP)reg_w(i)=s0&0xffff;		
+		}
+	}
+	else 
+	{
+    for(int i=R_EDI;i>=R_EAX;i--)
+		{
+			rtl_pop(&s0);
+      if(i!=R_ESP)reg_l(i)=s0;
+		}
+	}
+  //end{hjh}
   print_asm("popa");
 }
 

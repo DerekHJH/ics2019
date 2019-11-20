@@ -1,6 +1,7 @@
 #include <am.h>
 #include <x86.h>
 
+#include "klib.h"
 static _Context* (*user_handler)(_Event, _Context*) = NULL;
 
 void __am_irq0();
@@ -10,14 +11,45 @@ void __am_vecnull();
 
 _Context* __am_irq_handle(_Context *c) {
   _Context *next = c;
-  if (user_handler) {
+
+  //begin{hjh}
+//	printf("0x%p",c);
+	/*printf("The registers are:\n");
+	printf("0x%p\n",c->as);
+	printf("0x%p\n",c->edi);
+	printf("0x%x\n",c->esi);
+	printf("0x%x\n",c->ebp);
+	printf("0x%x\n",c->esp);
+	printf("0x%x\n",c->ebx);
+	printf("0x%x\n",c->edx);
+	printf("0x%x\n",c->ecx);
+	printf("0x%x\n",c->eax);
+	printf("Other fields are:\n");
+  for(int i=9;i<=12;i++)
+	{
+	  printf("%d\n",*(c+i*4));
+	}*/
+	//end{hjh}
+  if (user_handler) //usse_handler == do_event in irq.c
+	{
     _Event ev = {0};
-    switch (c->irq) {
-      default: ev.event = _EVENT_ERROR; break;
+    switch (c->irq) 
+		{
+			case 0x81:
+			{
+				ev.event=_EVENT_YIELD;
+				break;
+			}
+      default: 
+			{
+				ev.event = _EVENT_ERROR; 
+				break;
+			}
     }
 
     next = user_handler(ev, c);
-    if (next == NULL) {
+    if (next == NULL) 
+		{
       next = c;
     }
   }

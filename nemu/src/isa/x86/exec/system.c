@@ -28,15 +28,20 @@ make_EHelper(mov_cr2r) {
 
 make_EHelper(int) 
 {
+
+	//printf("the return address is 0x%x and the cpu.pc is 0x%x\n",decinfo.seq_pc,cpu.pc);
   raise_intr(id_dest->val,decinfo.seq_pc);//hjh
   print_asm("int %s", id_dest->str);
 
   difftest_skip_dut(1, 2);
 }
 
-make_EHelper(iret) {
-  TODO();
-
+make_EHelper(iret) 
+{
+  rtl_pop(&s0);
+	rtl_pop(&cpu.cs);
+	rtl_pop(&cpu.eflags.val);
+	rtl_j(s0);
   print_asm("iret");
 }
 

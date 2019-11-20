@@ -60,7 +60,7 @@ typedef struct
     uint32_t val;
 	}eflags;
   
-	uint16_t cs;
+	uint32_t cs;//only the lower 16 bits are used;
   struct 
 	{
 		uint32_t base;
