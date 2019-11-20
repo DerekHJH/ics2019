@@ -20,8 +20,34 @@ make_EHelper(pop)
   print_asm_template1(pop);
 }
 
-make_EHelper(pusha) {
-  TODO();
+make_EHelper(pusha) 
+{
+  if(decinfo.isa.is_operand_size_16)
+	{
+		s0=reg_w(R_ESP),s1=0;
+    for(int i=R_EAX;i<=R_EDI;i++)
+		{
+      if(i==R_ESP)rtl_push(&s0);
+			else 
+			{
+				s1=reg_w(i);
+				rtl_push(&s1);		
+			}
+		}
+	}
+	else 
+	{
+		s0=reg_l(R_ESP),s1=0;
+    for(int i=R_EAX;i<=R_EDI;i++)
+		{
+      if(i==R_ESP)rtl_push(&s0);
+			else 
+			{
+				s1=reg_l(i);
+				rtl_push(&s1);		
+			}
+		}
+	}
 
   print_asm("pusha");
 }

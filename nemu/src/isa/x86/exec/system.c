@@ -1,8 +1,14 @@
 #include "cpu/exec.h"
 
-make_EHelper(lidt) {
-  TODO();
-
+void raise_intr(uint32_t,vaddr_t);
+make_EHelper(lidt) 
+{
+	//begin{hjh}
+  cpu.IDTR.limit=vaddr_read(id_dest->addr,2);
+  if(id_dest->width==2)cpu.IDTR.base=vaddr_read(id_dest->addr+2,4)&0xffffff;
+	else if(id_dest->width==4)cpu.IDTR.base=vaddr_read(id_dest->addr+2,4);
+	else panic("lidt has met undefined operand length\n");
+  //end{hjh}
   print_asm_template1(lidt);
 }
 
@@ -20,9 +26,9 @@ make_EHelper(mov_cr2r) {
   difftest_skip_ref();
 }
 
-make_EHelper(int) {
-  TODO();
-
+make_EHelper(int) 
+{
+  raise_intr(id_dest->val,decinfo.seq_pc);//hjh
   print_asm("int %s", id_dest->str);
 
   difftest_skip_dut(1, 2);
