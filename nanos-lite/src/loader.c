@@ -9,14 +9,37 @@
 # define Elf_Phdr Elf32_Phdr
 #endif
 
-static uintptr_t loader(PCB *pcb, const char *filename) {
-  TODO();
+size_t ramdisk_read(void *, size_t, size_t);//hjh
+
+static uintptr_t loader(PCB *pcb, const char *filename) 
+{
+  Elf_Ehdr ELFheader;
+  Elf_Phdr SEGheader;	
+  ramdisk_read(&ELFheader,0,sizeof(Elf_Ehdr));
+	//for(int i=0;i<16;i++)
+  //printf("%02x ",ELFheader.e_ident[i]);
+  //ramdisk_read(&SEGheader,ELFheader.e_phoff,ELFheader.e_phentsize*ELFheader.e_phnum);
+  //printf("The e_phoff is 0x%08x\n",ELFheader.e_phoff);
+	//printf("The e_phnum is 0x%08x\n",ELFheader.e_phnum);
+	//printf("The size of ELFheader  is 0x%d\n",sizeof(Elf_Ehdr));
+	//
+	for(int i=0;i<ELFheader.e_phnum;i++)
+	{
+		//printf("The offset of the header term is %x\n",ELFheader.e_phoff+i*ELFheader.e_phentsize);
+		ramdisk_read(&SEGheader,ELFheader.e_phoff+i*ELFheader.e_phentsize,ELFheader.e_phentsize);
+	  if(SEGheader.p_type==PT_LOAD&&SEGheader.p_flags==5)
+    {
+
+			return SEGheader.p_vaddr+0xf0;
+		}
+	}
+
   return 0;
 }
 
 void naive_uload(PCB *pcb, const char *filename) {
   uintptr_t entry = loader(pcb, filename);
-  Log("Jump to entry = %x", entry);
+  Log("Jump to entry = %08x", entry);
   ((void(*)())entry) ();
 }
 
