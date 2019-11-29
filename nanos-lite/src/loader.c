@@ -14,7 +14,7 @@ size_t ramdisk_read(void *, size_t, size_t);//hjh
 static uintptr_t loader(PCB *pcb, const char *filename) 
 {
   Elf_Ehdr ELFheader;
-  Elf_Phdr SEGheader;	
+  Elf_Phdr Proheader;	
   ramdisk_read(&ELFheader,0,sizeof(Elf_Ehdr));
 	//for(int i=0;i<16;i++)
   //printf("%02x ",ELFheader.e_ident[i]);
@@ -26,15 +26,14 @@ static uintptr_t loader(PCB *pcb, const char *filename)
 	for(int i=0;i<ELFheader.e_phnum;i++)
 	{
 		//printf("The offset of the header term is %x\n",ELFheader.e_phoff+i*ELFheader.e_phentsize);
-		ramdisk_read(&SEGheader,ELFheader.e_phoff+i*ELFheader.e_phentsize,ELFheader.e_phentsize);
-	  if(SEGheader.p_type==PT_LOAD&&SEGheader.p_flags==5)
+		ramdisk_read(&Proheader,ELFheader.e_phoff+i*ELFheader.e_phentsize,ELFheader.e_phentsize);
+	  if(Proheader.p_type==PT_LOAD)
     {
-
-			return SEGheader.p_vaddr+0xf0;
+      ramdisk_read((void *)Proheader.p_vaddr,Proheader.p_offset,Proheader.p_memsz);
+			memset((void *)(Proheader.p_vaddr+Proheader.p_filesz),0,Proheader.p_memsz-Proheader.p_filesz);
 		}
 	}
-
-  return 0;
+  return ELFheader.e_entry;
 }
 
 void naive_uload(PCB *pcb, const char *filename) {
