@@ -10,6 +10,7 @@ void raise_intr(uint32_t NO, vaddr_t ret_addr) {
   vaddr_t Term=(NO<<3)+cpu.IDTR.base;
 	vaddr_t JAddress=vaddr_read(Term,2)|(vaddr_read(Term+6,2)<<16);
   rtl_j(JAddress);
+	//printf("0x%08x\n",JAddress);
 }
 
 bool isa_query_intr(void) {
