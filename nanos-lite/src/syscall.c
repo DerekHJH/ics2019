@@ -1,6 +1,5 @@
 #include "common.h"
 #include "syscall.h"
-
 int sys_yield()
 {
 	_yield();
@@ -15,13 +14,16 @@ int sys_write(int fd,char *buf,int cnt)
 		{
 			_putc(*(buf+i));
 		}
-		return cnt;
 	}
 	else
 	{
-
+    printf("ohohoh!!!\n");
 	}
 	return cnt;
+}
+int sys_brk()
+{
+	return 0;
 }
 
 _Context* do_syscall(_Context *c) 
@@ -46,10 +48,16 @@ _Context* do_syscall(_Context *c)
       c->GPRx=sys_yield();
 		  break;		
 		}
-		case SYS_write:
+		case SYS_brk:
 		{
+      c->GPRx=sys_brk();
+			break;
+		}
+		case SYS_write:
+		{	
+			//printf("a1 is %d and a2 is %d and a3 is %d\n",a[1],a[2],a[3]);
 			c->GPRx=sys_write((int)a[1],(char *)a[2],(int)a[3]);
-			printf("a1 is %d and a2 is %d and a3 is %d\n",a[1],a[2],a[3]);
+			//printf("the cnt is %d\n",c->GPRx);
       //printf("I have reached here in do_syscall SYS_write!!!\n");
 			break;
 		}
