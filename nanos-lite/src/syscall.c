@@ -4,6 +4,7 @@ int fs_open(const char *path,int flags,int mode);
 int fs_close(int fd);
 int fs_read(int fs,void *buf,size_t len);
 int fs_write(int fd,void *buf,size_t len);
+__off_t fs_lseek(int fd,__off_t offset,int whence);
 
 int sys_yield()
 {
@@ -54,6 +55,12 @@ _Context* do_syscall(_Context *c)
 		{
       //printf("I have reached here in do_syscall SYS_close!!!\n");
 			c->GPRx=fs_close((int)a[1]);
+			break;
+		}
+		case SYS_lseek:
+		{
+      //printf("I have reached here in do_syscall SYS_lseek!!!\n");
+			c->GPRx=fs_lseek((int)a[1],(__off_t)a[2],(int)a[3]);
 			break;
 		}
 		case SYS_brk:

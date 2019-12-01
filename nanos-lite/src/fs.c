@@ -77,8 +77,8 @@ int fs_close(int fd)
 
 int fs_read(int fd,void *buf,size_t len)
 {
-  if(file_table[fd].open_offset+len>file_table[fd].disk_offset+file_table[fd].size)len=file_table[fd].disk_offset+file_table[fd].size-file_table[fd].open_offset;
-	ramdisk_read(buf,file_table[fd].open_offset,len);
+  if(file_table[fd].open_offset+len>file_table[fd].size)len=file_table[fd].size-file_table[fd].open_offset;
+	ramdisk_read(buf,file_table[fd].disk_offset+file_table[fd].open_offset,len);
   file_table[fd].open_offset+=len;
 	return len;
 }
@@ -94,14 +94,43 @@ int fs_write(int fd,void *buf,size_t len)
 	}
 	else
 	{
-    if(file_table[fd].open_offset+len>file_table[fd].disk_offset+file_table[fd].size)
+    if(file_table[fd].open_offset+len>file_table[fd].size)
 		{
 			printf("Caution!! We are wrting too much words into fd==%d\n",fd);
-			len=file_table[fd].disk_offset+file_table[fd].size-file_table[fd].open_offset;
+			len=file_table[fd].size-file_table[fd].open_offset;
 		}
-		ramdisk_write(buf,file_table[fd].open_offset,len);
+		ramdisk_write(buf,file_table[fd].disk_offset+file_table[fd].open_offset,len);
     file_table[fd].open_offset+=len;
 	}
 	return len;
 }
-
+__off_t fs_lseek(int fd,__off_t offset,int whence)
+{
+	__off_t temp=0;
+  switch(whence)
+	{
+		case SEEK_SET:
+		{
+      temp=offset;
+      break;
+		}
+		case SEEK_CUR:
+		{
+			temp=file_table[fd].open_offset+offset;
+			break;
+		}
+		case SEEK_END:
+		{
+			temp=file_table[fd].size+offset;
+			break;
+		}
+		default:panic("There is no such whence type!!!\n");
+	}
+	if(temp>file_table[fd].size)
+	{
+		printf("caution!!Your cursor has nearly moved out of the file!!\n");
+		temp=file_table[fd].size;
+	}
+	file_table[fd].open_offset=temp;
+  return temp;
+}
