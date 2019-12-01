@@ -2,6 +2,8 @@
 
 size_t ramdisk_read(void *buf, size_t offset, size_t len);//hjh
 size_t ramdisk_write(const void *buf, size_t offset, size_t len);//hjh
+size_t serial_write(const void *buf, size_t offset, size_t len);//hjh
+
 
 typedef size_t (*ReadFn) (void *buf, size_t offset, size_t len);
 typedef size_t (*WriteFn) (const void *buf, size_t offset, size_t len);
@@ -30,8 +32,8 @@ size_t invalid_write(const void *buf, size_t offset, size_t len) {
 /* This is the information about all files in disk. */
 static Finfo file_table[] __attribute__((used)) = {
   {"stdin", 0, 0, invalid_read, invalid_write},
-  {"stdout", 0, 0, invalid_read, invalid_write},
-  {"stderr", 0, 0, invalid_read, invalid_write},
+  {"stdout", 0, 0, invalid_read, serial_write},
+  {"stderr", 0, 0, invalid_read, serial_write},
 #include "files.h"
 };
 
@@ -78,30 +80,34 @@ int fs_close(int fd)
 int fs_read(int fd,void *buf,size_t len)
 {
   if(file_table[fd].open_offset+len>file_table[fd].size)len=file_table[fd].size-file_table[fd].open_offset;
-	ramdisk_read(buf,file_table[fd].disk_offset+file_table[fd].open_offset,len);
-  file_table[fd].open_offset+=len;
+	if(file_table[fd].read==NULL)
+	{
+	  ramdisk_read(buf,file_table[fd].disk_offset+file_table[fd].open_offset,len);
+	}
+	else 
+	{
+    file_table[fd].read(buf,file_table[fd].disk_offset+file_table[fd].open_offset,len);
+	}	
+	file_table[fd].open_offset+=len;
 	return len;
 }
 int fs_write(int fd,void *buf,size_t len)
 {
 	if(fd==0)panic("We cannot write to fd==0!!!\n");
-  if(fd==1||fd==2)
+  if(file_table[fd].open_offset+len>file_table[fd].size)
 	{
-		for(int i=0;i<len;i++)
-		{
-			_putc(*((char *)buf+i));
-		}
+		printf("Caution!! We are wrting too much words into fd==%d\n",fd);
+		len=file_table[fd].size-file_table[fd].open_offset;
+	}
+	if(file_table[fd].write==NULL)
+	{
+	  ramdisk_write(buf,file_table[fd].disk_offset+file_table[fd].open_offset,len);
 	}
 	else
 	{
-    if(file_table[fd].open_offset+len>file_table[fd].size)
-		{
-			printf("Caution!! We are wrting too much words into fd==%d\n",fd);
-			len=file_table[fd].size-file_table[fd].open_offset;
-		}
-		ramdisk_write(buf,file_table[fd].disk_offset+file_table[fd].open_offset,len);
-    file_table[fd].open_offset+=len;
-	}
+    file_table[fd].write(buf,file_table[fd].disk_offset+file_table[fd].open_offset,len);
+	}	
+	file_table[fd].open_offset+=len;
 	return len;
 }
 __off_t fs_lseek(int fd,__off_t offset,int whence)
