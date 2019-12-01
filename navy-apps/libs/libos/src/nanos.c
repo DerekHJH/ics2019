@@ -56,8 +56,9 @@ void _exit(int status) {
 }
 
 int _open(const char *path, int flags, mode_t mode) {
-  _exit(SYS_open);
-  return 0;
+  //_exit(SYS_open);
+  //return 0;
+	return _syscall_(SYS_open,(intptr_t)path,(intptr_t)flags,(intptr_t)mode);
 }
 
 int _write(int fd, void *buf, size_t count) {
@@ -80,14 +81,18 @@ void *_sbrk(intptr_t increment)
 	//end{hjh}
 }
 
-int _read(int fd, void *buf, size_t count) {
-  _exit(SYS_read);
-  return 0;
+int _read(int fd, void *buf, size_t count) 
+{
+  //_exit(SYS_read);
+  //return 0;
+	return _syscall_(SYS_read,(intptr_t)fd,(intptr_t)buf,(intptr_t)count);
 }
 
-int _close(int fd) {
-  _exit(SYS_close);
-  return 0;
+int _close(int fd) 
+{
+  //_exit(SYS_close);
+  //return 0;
+	return _syscall_(SYS_close,(intptr_t)fd,0,0);
 }
 
 off_t _lseek(int fd, off_t offset, int whence) {
