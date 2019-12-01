@@ -13,7 +13,7 @@ int main(int argc, char *argv[]) {
   /* Initialize the monitor. */
   int is_batch_mode = init_monitor(argc, argv);
 
-  is_batch_mode=false;
+  //is_batch_mode=false;
   /* Receive commands from user. */
 	//printf("tell me what us is_batch_mode %d\n",is_batch_mode);
   ui_mainloop(is_batch_mode);

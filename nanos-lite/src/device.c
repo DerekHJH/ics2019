@@ -20,8 +20,19 @@ static const char *keyname[256] __attribute__((used)) = {
 
 size_t events_read(void *buf, size_t offset, size_t len) 
 {
+  int Key=read_key();
+	if(Key!=_KEY_NONE)
+	{
+		if(Key&0x8000)len=sprintf(buf,"kd %s\n",keyname[Key&0xfff]);
+		else len=sprintf(buf,"ku %s\n",keyname[Key&0xfff]);
+	}
+	else 
+	{
+		len=sprintf(buf,"t %d\n",uptime());
+		//printf("the hahahahhahahahhaha is %010d\n",uptime());
+	}
   
-  return 0;
+  return len;
 }
 
 static char dispinfo[128] __attribute__((used)) = {};
