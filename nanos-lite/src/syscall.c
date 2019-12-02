@@ -1,11 +1,13 @@
 #include "common.h"
 #include "syscall.h"
+#include "proc.h"  //hjh
+
 int fs_open(const char *path,int flags,int mode);
 int fs_close(int fd);
 int fs_read(int fs,void *buf,size_t len);
 int fs_write(int fd,void *buf,size_t len);
 __off_t fs_lseek(int fd,__off_t offset,int whence);
-
+void naive_uload(PCB *, const char *);//hjh 
 int sys_yield()
 {
 	_yield();
@@ -30,9 +32,18 @@ _Context* do_syscall(_Context *c)
   	case SYS_exit:
 		{
       //printf("I have reached here in do_syscall SYS_exit!!!\n");
-      _halt(a[1]);
+      //_halt(a[1]);
+			printf("the file is %s\n",a[1]);
+      naive_uload(NULL,"/bin/init");
+			c->GPRx=0;
       break;
 		}
+		case SYS_execve:
+		{
+			c->GPRx=0;
+      naive_uload(NULL,(char *)a[1]);
+			break;
+		}                                		
 		case SYS_yield:
 		{
       //printf("I have reached here in do_syscall SYS_yield!!!\n");
