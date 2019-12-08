@@ -62,7 +62,8 @@ void sdl_clear_event_queue() {
   while (SDL_PollEvent(&event));
 }
 
-void init_device() {
+void init_device() 
+{
   init_serial();
   init_timer();
   init_vga();

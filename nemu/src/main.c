@@ -1,4 +1,3 @@
-//This can be deleted because we are only using expr for checking purpose
 #include<stdlib.h>
 #include "nemu.h"
 #include<regex.h>
@@ -9,13 +8,14 @@ int init_monitor(int, char *[]);
 void ui_mainloop(int);
 
 
-int main(int argc, char *argv[]) {
+int main(int argc, char *argv[]) 
+{
   /* Initialize the monitor. */
   int is_batch_mode = init_monitor(argc, argv);
 
   //is_batch_mode=false;
   /* Receive commands from user. */
-	//printf("tell me what us is_batch_mode %d\n",is_batch_mode);
+	//printf("tell me what is_batch_mode %d\n",is_batch_mode);
   ui_mainloop(is_batch_mode);
 
 

@@ -30,16 +30,19 @@ static inline void welcome() {
   printf("For help, type \"help\"\n");
 }
 
-static inline long load_img() {
+static inline long load_img() 
+{
   long size;
-  if (img_file == NULL) {
+  if (img_file == NULL) 
+	{
     Log("No image is given. Use the default build-in image.");
     extern uint8_t isa_default_img[];
     extern long isa_default_img_size;
     size = isa_default_img_size;
     memcpy(guest_to_host(IMAGE_START), isa_default_img, size);
   }
-  else {
+  else 
+	{
     int ret;
 
     FILE *fp = fopen(img_file, "rb");
@@ -62,10 +65,13 @@ static inline long load_img() {
   return size;
 }
 
-static inline void parse_args(int argc, char *argv[]) {
+static inline void parse_args(int argc, char *argv[]) 
+{
   int o;
-  while ( (o = getopt(argc, argv, "-bl:d:a:")) != -1) {
-    switch (o) {
+  while ( (o = getopt(argc, argv, "-bl:d:a:")) != -1) 
+	{
+    switch (o) 
+		{
       case 'b': is_batch_mode = true; break;
       case 'a': mainargs = optarg; break;
       case 'l': log_file = optarg; break;

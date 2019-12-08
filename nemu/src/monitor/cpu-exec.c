@@ -26,20 +26,23 @@ void log_clearbuf(void);
 
 static uint64_t g_nr_guest_instr = 0;
 
-void monitor_statistic(void) {
+void monitor_statistic(void) 
+{
   Log("total guest instructions = %ld", g_nr_guest_instr);
 }
 
 /* Simulate how the CPU works. */
 void cpu_exec(uint64_t n) {
-  switch (nemu_state.state) {
+  switch (nemu_state.state) 
+	{
     case NEMU_END: case NEMU_ABORT:
       printf("Program execution has ended. To restart the program, exit NEMU and run again.\n");
       return;
     default: nemu_state.state = NEMU_RUNNING;
   }
 
-  for (; n > 0; n --) {
+  for (; n > 0; n --) 
+	{
     __attribute__((unused)) vaddr_t ori_pc = cpu.pc;
 
     /* Execute one instruction, including instruction fetch,
@@ -47,29 +50,31 @@ void cpu_exec(uint64_t n) {
     __attribute__((unused)) vaddr_t seq_pc = exec_once();
 
 #if defined(DIFF_TEST)
-  difftest_step(ori_pc, cpu.pc);
+    difftest_step(ori_pc, cpu.pc);
 #endif
 
 #ifdef DEBUG
-  if (g_nr_guest_instr < LOG_MAX) {
-    asm_print(ori_pc, seq_pc - ori_pc, n < MAX_INSTR_TO_PRINT);
-  }
-  else if (g_nr_guest_instr == LOG_MAX) {
-    log_write("\n[Warning] To restrict the size of log file, "
-              "we do not record more instruction trace beyond this point.\n"
-              "To capture more trace, you can modify the LOG_MAX macro in %s\n\n", __FILE__);
-  }
-  log_clearbuf();
+    if (g_nr_guest_instr < LOG_MAX) 
+	  {
+      asm_print(ori_pc, seq_pc - ori_pc, n < MAX_INSTR_TO_PRINT);
+    }
+    else if (g_nr_guest_instr == LOG_MAX) 
+	  {
+      log_write("\n[Warning] To restrict the size of log file, "
+                "we do not record more instruction trace beyond this point.\n"
+                "To capture more trace, you can modify the LOG_MAX macro in %s\n\n", __FILE__);
+    }
+    log_clearbuf();
     /* TODO: check watchpoints here. */
-	if(wp_check())
-	{
-    nemu_state.state=NEMU_STOP;
-		printf("Some watchpoints have been activated!!\n");
-	}
+	  if(wp_check())
+	  { 
+      nemu_state.state=NEMU_STOP;
+		  printf("Some watchpoints have been activated!!\n");
+	  }
 
 #endif
 
-  g_nr_guest_instr ++;
+    g_nr_guest_instr ++;
 
 #ifdef HAS_IOE
     extern void device_update();
@@ -79,14 +84,14 @@ void cpu_exec(uint64_t n) {
     if (nemu_state.state != NEMU_RUNNING) break;
   }
 
-  switch (nemu_state.state) {
+  switch (nemu_state.state) 
+	{
     case NEMU_RUNNING: nemu_state.state = NEMU_STOP; break;
 
     case NEMU_END: case NEMU_ABORT:
       _Log("nemu: %s\33[0m at pc = 0x%08x\n\n",
           (nemu_state.state == NEMU_ABORT ? "\33[1;31mABORT" :
-           (nemu_state.halt_ret == 0 ? "\33[1;32mHIT GOOD TRAP" : "\33[1;31mHIT BAD TRAP")),
-          nemu_state.halt_pc);
+           (nemu_state.halt_ret == 0 ? "\33[1;32mHIT GOOD TRAP" : "\33[1;31mHIT BAD TRAP")),nemu_state.halt_pc);
       monitor_statistic();
   }
 }

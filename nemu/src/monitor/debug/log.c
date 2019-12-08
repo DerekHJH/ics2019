@@ -3,7 +3,8 @@
 
 FILE *log_fp = NULL;
 
-void init_log(const char *log_file) {
+void init_log(const char *log_file) 
+{
   if (log_file == NULL) return;
   log_fp = fopen(log_file, "w");
   Assert(log_fp, "Can not open '%s'", log_file);
