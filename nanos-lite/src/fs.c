@@ -12,7 +12,8 @@ size_t fbsync_write(const void *buf, size_t offset, size_t len);//hjh
 typedef size_t (*ReadFn) (void *buf, size_t offset, size_t len);
 typedef size_t (*WriteFn) (const void *buf, size_t offset, size_t len);
 
-typedef struct {
+typedef struct 
+{
   char *name;
   size_t size;
   size_t disk_offset;
@@ -63,7 +64,8 @@ size_t getopen(int fd)
 }
 //end{hjh}
 
-void init_fs() {
+void init_fs() 
+{
   // TODO: initialize the size of /dev/fb
   file_table[FD_FB].size=screen_width()*screen_height()*4;	
 }

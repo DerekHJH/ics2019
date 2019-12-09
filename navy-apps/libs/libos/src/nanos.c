@@ -40,7 +40,8 @@ intptr_t curbrk=&_end;
 #error syscall is not supported
 #endif
 
-intptr_t _syscall_(intptr_t type, intptr_t a0, intptr_t a1, intptr_t a2) {
+intptr_t _syscall_(intptr_t type, intptr_t a0, intptr_t a1, intptr_t a2) 
+{
   register intptr_t _gpr1 asm (GPR1) = type;
   register intptr_t _gpr2 asm (GPR2) = a0;
   register intptr_t _gpr3 asm (GPR3) = a1;
@@ -50,18 +51,21 @@ intptr_t _syscall_(intptr_t type, intptr_t a0, intptr_t a1, intptr_t a2) {
   return ret;
 }
 
-void _exit(int status) {
+void _exit(int status) 
+{
   _syscall_(SYS_exit, status, 0, 0);
   while (1);
 }
 
-int _open(const char *path, int flags, mode_t mode) {
+int _open(const char *path, int flags, mode_t mode) 
+{
   //_exit(SYS_open);
   //return 0;
 	return _syscall_(SYS_open,(intptr_t)path,(intptr_t)flags,(intptr_t)mode);
 }
 
-int _write(int fd, void *buf, size_t count) {
+int _write(int fd, void *buf, size_t count) 
+{
   //_exit(SYS_write);
 	return _syscall_(SYS_write,(intptr_t)fd,(intptr_t)buf,(intptr_t)count);
 }
@@ -94,12 +98,14 @@ int _close(int fd)
 	return _syscall_(SYS_close,(intptr_t)fd,0,0);
 }
 
-off_t _lseek(int fd, off_t offset, int whence) {
+off_t _lseek(int fd, off_t offset, int whence) 
+{
   //_exit(SYS_lseek);
   return _syscall_(SYS_lseek,(intptr_t)fd,(intptr_t)offset,(intptr_t)whence);
 }
 
-int _execve(const char *fname, char * const argv[], char *const envp[]) {
+int _execve(const char *fname, char * const argv[], char *const envp[]) 
+{
   //_exit(SYS_execve);
   //return 0;
 	return _syscall_(SYS_execve,(intptr_t)fname,(intptr_t)argv,(intptr_t)envp);

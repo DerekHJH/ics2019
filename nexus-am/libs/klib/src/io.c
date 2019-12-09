@@ -28,7 +28,8 @@ void draw_rect(uint32_t *pixels, int x, int y, int w, int h) {
   _io_write(_DEV_VIDEO, _DEVREG_VIDEO_FBCTL, &ctl, sizeof(ctl));
 }
 
-void draw_sync() {
+void draw_sync() 
+{
   _DEV_VIDEO_FBCTL_t ctl;
   ctl.pixels = NULL;
   ctl.x = ctl.y = ctl.w = ctl.h = 0;

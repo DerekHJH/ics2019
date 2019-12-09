@@ -33,7 +33,7 @@ _Context* do_syscall(_Context *c)
 		{
       //printf("I have reached here in do_syscall SYS_exit!!!\n");
       //_halt(a[1]);
-			printf("the file is %s\n",a[1]);
+			//printf("the file is %02d\n",a[1]);
       naive_uload(NULL,"/bin/init");
 			c->GPRx=0;
       break;

@@ -1,5 +1,7 @@
 #include "cpu/exec.h"
 
+make_EHelper(bsf);
+
 make_EHelper(mov);
 
 make_EHelper(operand_size);

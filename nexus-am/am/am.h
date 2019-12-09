@@ -34,7 +34,8 @@ enum {
 };
 
 // Memory area for [@start, @end)
-typedef struct _Area {
+typedef struct _Area 
+{
   void *start, *end;
 } _Area; 
 
@@ -50,7 +51,8 @@ typedef struct _Context _Context;
 
 // A protected address space with user memory @area
 // and arch-dependent @ptr
-typedef struct _AddressSpace {
+typedef struct _AddressSpace 
+{
   size_t pgsize;
   _Area area;
   void *ptr;

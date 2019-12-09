@@ -1,5 +1,30 @@
 #include "cpu/exec.h"
 
+make_EHelper(bsf)
+{
+	int Limit=32,i;
+  if(decinfo.isa.is_operand_size_16)Limit=16;
+  for(i=0;i<Limit;i++,id_src->val>>=1)
+	{
+		if(id_src->val&1)break;
+	}
+	if(i==Limit)
+	{
+		s0=1;
+		id_dest->val=0;	
+	}
+	else
+	{
+		s0=0;
+		id_dest->val=i;
+	}
+  rtl_set_ZF(&s0);
+	operand_write(id_dest, &id_dest->val);
+  print_asm_template2(bsf);
+}
+
+
+
 make_EHelper(mov) {
   operand_write(id_dest, &id_src->val);
   print_asm_template2(mov);

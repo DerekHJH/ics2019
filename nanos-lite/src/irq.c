@@ -1,11 +1,16 @@
 #include "common.h"
 _Context * do_syscall(_Context *);
-static _Context* do_event(_Event e, _Context* c) {
+_Context* schedule(_Context *prev); 
+
+
+static _Context* do_event(_Event e, _Context* c) 
+{
   switch (e.event) 
 	{ 
     case _EVENT_YIELD:
 		{
 			//printf("_EVENT_YIELD is triggered!!\n");
+			return schedule(c);
 			break;
 		}
     case _EVENT_SYSCALL:
@@ -19,7 +24,8 @@ static _Context* do_event(_Event e, _Context* c) {
   return NULL;
 }
 
-void init_irq(void) {
+void init_irq(void) 
+{
   Log("Initializing interrupt/exception handler...");
   _cte_init(do_event);
 }

@@ -92,7 +92,8 @@ static inline make_DopHelper(r) {
  * Rd
  * Sw
  */
-static inline void decode_op_rm(vaddr_t *pc, Operand *rm, bool load_rm_val, Operand *reg, bool load_reg_val) {
+static inline void decode_op_rm(vaddr_t *pc, Operand *rm, bool load_rm_val, Operand *reg, bool load_reg_val) 
+{
   read_ModR_M(pc, rm, load_rm_val, reg, load_reg_val);
 }
 
@@ -125,7 +126,8 @@ make_DHelper(E2G) {
   decode_op_rm(pc, id_src, true, id_dest, true);
 }
 
-make_DHelper(mov_E2G) {
+make_DHelper(mov_E2G) 
+{
   decode_op_rm(pc, id_src, true, id_dest, false);
 }
 

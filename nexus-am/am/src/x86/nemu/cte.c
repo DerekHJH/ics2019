@@ -9,7 +9,8 @@ void __am_vecsys();
 void __am_vectrap();
 void __am_vecnull();
 
-_Context* __am_irq_handle(_Context *c) {
+_Context* __am_irq_handle(_Context *c) 
+{
   _Context *next = c;
 
   //begin{hjh}
@@ -62,11 +63,13 @@ _Context* __am_irq_handle(_Context *c) {
   return next;
 }
 
-int _cte_init(_Context*(*handler)(_Event, _Context*)) {
+int _cte_init(_Context*(*handler)(_Event, _Context*)) 
+{
   static GateDesc idt[NR_IRQ];//NR_IRQ number of interrupt request
 
   // initialize IDT
-  for (unsigned int i = 0; i < NR_IRQ; i ++) {
+  for (unsigned int i = 0; i < NR_IRQ; i ++) 
+	{
     idt[i] = GATE(STS_TG32, KSEL(SEG_KCODE), __am_vecnull, DPL_KERN);
   }
 
@@ -84,15 +87,27 @@ int _cte_init(_Context*(*handler)(_Event, _Context*)) {
   return 0;
 }
 
-_Context *_kcontext(_Area stack, void (*entry)(void *), void *arg) {
-  return NULL;
+_Context *_kcontext(_Area stack, void (*entry)(void *), void *arg) 
+{
+	//begin{hjh}
+  _Context *c=(_Context *)stack.end-1;
+	memset(c,0,sizeof(_Context));
+	c->eip=(uintptr_t)entry;
+	c->cs=0x8;
+	c->eflags=0x2;
+  //Inspirations from file init.c
+	printf("the entry is 0x%lx\n", (uintptr_t)entry);
+	//end{hjh}
+  return c;
 }
 
-void _yield() {
+void _yield() 
+{
   asm volatile("int $0x81");
 }
 
-int _intr_read() {
+int _intr_read() 
+{
   return 0;
 }
 

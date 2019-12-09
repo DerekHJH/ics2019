@@ -4,7 +4,8 @@
 void __am_vga_init();
 void __am_timer_init();
 
-int _ioe_init() {
+int _ioe_init() 
+{
   __am_vga_init();
   __am_timer_init();
   return 0;

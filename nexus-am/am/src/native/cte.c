@@ -44,11 +44,13 @@ _Context *_kcontext(_Area stack, void (*entry)(void *), void *arg) {
   return c;
 }
 
-void _yield() {
+void _yield() 
+{
   asm volatile("call *0x100000": : "a"(-1));
 }
 
-int _intr_read() {
+int _intr_read() 
+{
   return 0;
 }
 
