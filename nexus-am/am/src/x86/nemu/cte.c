@@ -96,7 +96,7 @@ _Context *_kcontext(_Area stack, void (*entry)(void *), void *arg)
 	c->cs=0x8;
 	c->eflags=0x2;
   //Inspirations from file init.c
-	printf("the entry is 0x%lx\n", (uintptr_t)entry);
+	//printf("the entry is 0x%lx\n", (uintptr_t)entry);
 	//end{hjh}
   return c;
 }

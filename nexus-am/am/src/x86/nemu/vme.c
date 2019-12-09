@@ -1,7 +1,7 @@
 #include <am.h>
 #include <x86.h>
 #include <nemu.h>
-
+#include "klib.h"
 #define PG_ALIGN __attribute((aligned(PGSIZE)))
 
 static PDE kpdirs[NR_PDE] PG_ALIGN = {};
@@ -83,6 +83,15 @@ int _map(_AddressSpace *as, void *va, void *pa, int prot) {
   return 0;
 }
 
-_Context *_ucontext(_AddressSpace *as, _Area ustack, _Area kstack, void *entry, void *args) {
-  return NULL;
+_Context *_ucontext(_AddressSpace *as, _Area ustack, _Area kstack, void *entry, void *args) 
+{
+	int Mainsize=sizeof(int)+2*sizeof(char *);
+  void *Stackptr=ustack.end-Mainsize;
+	memset(Stackptr,0,Mainsize);
+  _Context *c=(_Context *)Stackptr-1;
+	memset(c,0,sizeof(_Context));
+	c->eip=(uintptr_t)entry;
+	c->cs=0x8;
+	c->eflags=0x2;//Other students set it as 1<<9;
+  return c;
 }
