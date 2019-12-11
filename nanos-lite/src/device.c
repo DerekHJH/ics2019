@@ -3,6 +3,7 @@
 
 size_t serial_write(const void *buf, size_t offset, size_t len) 
 {
+	_yield();//testing
   for(int i=0;i<len;i++)
 	{
 		_putc(*((char *)buf+i));
@@ -20,6 +21,7 @@ static const char *keyname[256] __attribute__((used)) = {
 
 size_t events_read(void *buf, size_t offset, size_t len) 
 {
+	_yield();//testing
   int Key=read_key();
 	if(Key!=_KEY_NONE)
 	{
@@ -46,6 +48,7 @@ size_t dispinfo_read(void *buf, size_t offset, size_t len)
 
 size_t fb_write(const void *buf, size_t offset, size_t len) 
 {
+	_yield();//testing
   int w=screen_width(),x=(offset>>2)%w,y=(offset>>2)/w,tot=len>>2;
 	draw_rect((uint32_t *)buf,x,y,tot,1);
   return len;

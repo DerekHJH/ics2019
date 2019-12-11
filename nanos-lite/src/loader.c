@@ -17,6 +17,7 @@ size_t getdisk(int fd);
 
 static uintptr_t loader(PCB *pcb, const char *filename) 
 {
+	//printf("the filename is %s\n",filename);
 	int fd=fs_open(filename,0,0);
 	int Base=getdisk(fd);
 	//printf("fd is %d\n",fd);
@@ -39,6 +40,7 @@ static uintptr_t loader(PCB *pcb, const char *filename)
 			memset((void *)(Proheader.p_vaddr+Proheader.p_filesz),0,Proheader.p_memsz-Proheader.p_filesz);
 		}
 	}
+	//printf("the entryyyy is 0x%x\n",ELFheader.e_entry);
   return ELFheader.e_entry;
 }
 
@@ -62,7 +64,7 @@ void context_kload(PCB *pcb, void *entry)
 void context_uload(PCB *pcb, const char *filename) 
 {
   uintptr_t entry = loader(pcb, filename);
-
+  //printf("the entry is 0x%x\n",entry);
   _Area stack;
   stack.start = pcb->stack;
   stack.end = stack.start + sizeof(pcb->stack);

@@ -31,19 +31,21 @@ void init_proc()
 
 
 	context_uload(&pcb[1],"/bin/init");
-	//context_kload(&pcb[0],(void *)hello_fun);//to test hello_fun
-
-  switch_boot_pcb();
+	context_kload(&pcb[0],(void *)hello_fun);//to test hello_fun
+	//context_kload(&pcb[0],"/bin/hello");//to test hello_fun
+  
+	switch_boot_pcb();
 
   Log("Initializing processes...");
 
   // load program here
-  naive_uload(NULL,"/bin/init");
+  //naive_uload(NULL,"/bin/init");
 }
 
 _Context* schedule(_Context *prev) 
 {
   current->cp=prev;
+	//current->cp=&pcb[0];
 	current=(current==&pcb[0]?&pcb[1]:&pcb[0]);
   return current->cp;
 }

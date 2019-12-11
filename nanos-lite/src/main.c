@@ -13,6 +13,7 @@ int main() {
 #endif
 
   Log("'Hello World!' from Nanos-lite");
+	//This will use printf in klib and eventually call _putc;
   Log("Build time: %s, %s", __TIME__, __DATE__);
 
   init_ramdisk();

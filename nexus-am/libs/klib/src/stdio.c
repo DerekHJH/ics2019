@@ -108,7 +108,11 @@ int vsprintf(char *out, const char *fmt, va_list ap)
 				int width=0;
 				long long temp=0;
         if(*(fmt+l)=='p')temp=va_arg(ap,uint32_t);
-				else if(*(fmt+l-1)=='l')temp=va_arg(ap,long long);
+				else if(*(fmt+l-1)=='l')
+				{
+					temp=va_arg(ap,long long);
+					l--;
+				}
 				else temp=va_arg(ap,int);
 				for(int i=1;i<l;i++)
 				{
