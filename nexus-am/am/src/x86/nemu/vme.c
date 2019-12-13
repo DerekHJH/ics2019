@@ -17,9 +17,11 @@ static _Area segments[] =
 };
 
 #define NR_KSEG_MAP (sizeof(segments) / sizeof(segments[0]))
-
 int _vme_init(void* (*pgalloc_f)(size_t), void (*pgfree_f)(void*)) 
 {
+
+	printf("the address of kpdirs and kptabs are 0x%x, and 0x%x\n",kpdirs,kptabs);
+
   pgalloc_usr = pgalloc_f;
   pgfree_usr = pgfree_f;
 
