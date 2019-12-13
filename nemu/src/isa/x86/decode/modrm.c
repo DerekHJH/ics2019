@@ -114,9 +114,11 @@ void read_ModR_M(vaddr_t *pc, Operand *rm, bool load_rm_val, Operand *reg, bool 
     sprintf(rm->str, "%%%s", reg_name(m.R_M, rm->width));
 #endif
   }
-  else {
+  else 
+	{
     load_addr(pc, &m, rm);
-    if (load_rm_val) {
+    if (load_rm_val) 
+		{
       rtl_lm(&rm->val, &rm->addr, rm->width);
 			//printf("rm->val is 0x%x  and rm->addr is 0x%0x   and rm->width is %d\n",rm->val,rm->addr,rm->width);
     }

@@ -255,13 +255,15 @@ static inline uint32_t get_efl() {
   return efl;
 }
 
-static inline uint32_t get_cr0(void) {
+static inline uint32_t get_cr0(void) 
+{
   volatile uint32_t val;
   asm volatile ("movl %%cr0, %0" : "=r"(val));
   return val;
 }
 
-static inline void set_cr0(uint32_t cr0) {
+static inline void set_cr0(uint32_t cr0) 
+{
   asm volatile ("movl %0, %%cr0" : : "r"(cr0));
 }
 
@@ -292,7 +294,8 @@ static inline uint32_t get_cr2() {
   return val;
 }
 
-static inline void set_cr3(void *pdir) {
+static inline void set_cr3(void *pdir) 
+{
   asm volatile ("movl %0, %%cr3" : : "r"(pdir));
 }
 

@@ -115,7 +115,8 @@ make_DHelper(G2E) {
   decode_op_rm(pc, id_dest, true, id_src, true);
 }
 
-make_DHelper(mov_G2E) {
+make_DHelper(mov_G2E) 
+{
   decode_op_rm(pc, id_dest, false, id_src, true);
 }
 

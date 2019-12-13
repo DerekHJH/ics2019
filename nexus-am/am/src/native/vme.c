@@ -20,7 +20,8 @@ void __am_shm_munmap(void *va);
 
 static int vme_enable = 0;
 
-int _vme_init(void* (*pgalloc_f)(size_t), void (*pgfree_f)(void*)) {
+int _vme_init(void* (*pgalloc_f)(size_t), void (*pgfree_f)(void*)) 
+{
   // we do not need to ask MM to get a page from OS,
   // since we can call malloc() in native
   vme_enable = 1;

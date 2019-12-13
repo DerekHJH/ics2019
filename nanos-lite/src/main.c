@@ -7,7 +7,8 @@ void init_irq(void);
 void init_fs(void);
 void init_proc(void);
 
-int main() {
+int main() 
+{
 #ifdef HAS_VME
   init_mm();
 #endif

@@ -16,7 +16,8 @@ uint8_t* new_space(int size) {
   return p;
 }
 
-static inline void check_bound(IOMap *map, paddr_t addr) {
+static inline void check_bound(IOMap *map, paddr_t addr) 
+{
   Assert(map != NULL && addr <= map->high && addr >= map->low,
       "address (0x%08x) is out of bound {%s} [0x%08x, 0x%08x] at pc = 0x%08x",
       addr, (map ? map->name : "???"), (map ? map->low : 0), (map ? map->high : 0), cpu.pc);
@@ -26,7 +27,8 @@ static inline void invoke_callback(io_callback_t c, uint32_t offset, int len, bo
   if (c != NULL) { c(offset, len, is_write); }
 }
 
-uint32_t map_read(paddr_t addr, int len, IOMap *map) {
+uint32_t map_read(paddr_t addr, int len, IOMap *map) 
+{
   assert(len >= 1 && len <= 4);
   check_bound(map, addr);
   uint32_t offset = addr - map->low;

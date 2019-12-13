@@ -2,7 +2,7 @@
 #define __X86_REG_H__
 
 #include "common.h"
-
+#include "mmu.h"
 #define PC_START IMAGE_START
 
 enum { R_EAX, R_ECX, R_EDX, R_EBX, R_ESP, R_EBP, R_ESI, R_EDI };
@@ -66,11 +66,15 @@ typedef struct
 		uint32_t base;
 		uint16_t limit;
 	}IDTR;
+
+  CR3 cr3;
+	CR0 cr0;
 	//end{hjh}
 
 } CPU_state;
 
-static inline int check_reg_index(int index) {
+static inline int check_reg_index(int index) 
+{
   assert(index >= 0 && index < 8);
   return index;
 }
@@ -79,7 +83,8 @@ static inline int check_reg_index(int index) {
 #define reg_w(index) (cpu.gpr[check_reg_index(index)]._16)
 #define reg_b(index) (cpu.gpr[check_reg_index(index) & 0x3]._8[index >> 2])
 
-static inline const char* reg_name(int index, int width) {
+static inline const char* reg_name(int index, int width) 
+{
   extern const char* regsl[];
   extern const char* regsw[];
   extern const char* regsb[];

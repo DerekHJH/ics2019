@@ -34,8 +34,10 @@ typedef union CR3 {
 
 
 /* the 32bit Page Directory(first level page table) data structure */
-typedef union PageDirectoryEntry {
-  struct {
+typedef union PageDirectoryEntry 
+{
+  struct 
+	{
     uint32_t present             : 1;
     uint32_t read_write          : 1; 
     uint32_t user_supervisor     : 1;
@@ -49,8 +51,10 @@ typedef union PageDirectoryEntry {
 } PDE;
 
 /* the 32bit Page Table Entry(second level page table) data structure */
-typedef union PageTableEntry {
-  struct {
+typedef union PageTableEntry 
+{
+  struct 
+	{
     uint32_t present             : 1;
     uint32_t read_write          : 1;
     uint32_t user_supervisor     : 1;
