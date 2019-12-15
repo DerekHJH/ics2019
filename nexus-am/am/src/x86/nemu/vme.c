@@ -20,7 +20,7 @@ static _Area segments[] =
 int _vme_init(void* (*pgalloc_f)(size_t), void (*pgfree_f)(void*)) 
 {
 
-	printf("the address of kpdirs and kptabs are 0x%x, and 0x%x\n",kpdirs,kptabs);
+	//printf("the address of kpdirs and kptabs are 0x%x, and 0x%x\n",kpdirs,kptabs);
 
   pgalloc_usr = pgalloc_f;
   pgfree_usr = pgfree_f;
@@ -36,6 +36,7 @@ int _vme_init(void* (*pgalloc_f)(size_t), void (*pgfree_f)(void*))
   PTE *ptab = kptabs;
   for (i = 0; i < NR_KSEG_MAP; i ++) 
 	{
+		//printf("the segments.end is 0x%x",segments[0].end);
     uint32_t pdir_idx = (uintptr_t)segments[i].start / (PGSIZE * NR_PTE);
     uint32_t pdir_idx_end = (uintptr_t)segments[i].end / (PGSIZE * NR_PTE);
     for (; pdir_idx < pdir_idx_end; pdir_idx ++) 
@@ -88,13 +89,27 @@ void __am_switch(_Context *c)
 {
   if (vme_enable) 
 	{
+		//printf("haha\n");
     set_cr3(c->as->ptr);
     cur_as = c->as;
+		//printf("the cur_as->ptr is 0x%x\n",cur_as->ptr);
   }
 }
 
 int _map(_AddressSpace *as, void *va, void *pa, int prot) 
 {
+	uint32_t d=((uint32_t)va>>22)&0x3ff;
+	//printf("d is 0x%x\n",d);
+	uint32_t t=((uint32_t)va>>12)&0x3ff;
+  uint32_t *pde=(uint32_t *)((uint32_t)(as->ptr)+(d<<2));
+	//printf("previously the *pde is 0x%x\n",*pde);
+  if(((*pde)&(PTE_P))==0)
+	{
+    (*pde)=(uint32_t)pgalloc_usr(1)|PTE_P;
+	}	
+  uint32_t *pte=(uint32_t *)(((*pde)&0xfffff000)+(t<<2));
+  (*pte)=((uint32_t)pa&0xfffff000)|PTE_P;
+	//printf("the va is 0x%x and the pa is 0x%x and the pde is 0x%x and the pte is 0x%x and the as->ptr is 0x%x and the *pde is 0x%x and the *pte is 0x%x\n",va,pa,pde,pte,as->ptr,*pde,*pte);
   return 0;
 }
 
@@ -108,5 +123,6 @@ _Context *_ucontext(_AddressSpace *as, _Area ustack, _Area kstack, void *entry, 
 	c->eip=(uintptr_t)entry;
 	c->cs=0x8;
 	c->eflags=0x2;//Other students set it as 1<<9;
+	c->as=as;
   return c;
 }

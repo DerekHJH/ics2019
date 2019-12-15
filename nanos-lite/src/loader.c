@@ -9,6 +9,8 @@
 # define Elf_Phdr Elf32_Phdr
 #endif
 
+#define  DEFAULT_ENTRY (uint8_t *)0x8048000;
+int fs_read(int fd,void *buf,size_t len);//hjh
 size_t ramdisk_read(void *, size_t, size_t);//hjh
 int fs_open(const char *path,int flags,int mode);//hjh
 size_t getopen(int fd);
@@ -17,7 +19,9 @@ size_t getdisk(int fd);
 
 static uintptr_t loader(PCB *pcb, const char *filename) 
 {
+
 	//printf("the filename is %s\n",filename);
+	/*
 	int fd=fs_open(filename,0,0);
 	int Base=getdisk(fd);
 	//printf("fd is %d\n",fd);
@@ -42,6 +46,25 @@ static uintptr_t loader(PCB *pcb, const char *filename)
 	}
 	//printf("the entryyyy is 0x%x\n",ELFheader.e_entry);
   return ELFheader.e_entry;
+	*/
+
+	//Rewrite ramdisk!!!
+	int fd=fs_open(filename,0,0);
+  int fsize=getsize(fd);   
+	void *va=(void *)DEFAULT_ENTRY;
+	void *pa=NULL;
+	while(fsize>0)
+	{
+    //printf("the filesize is %d\n",fsize);
+		pa=new_page(1);
+		_map(&(pcb->as),va,pa,1);
+    fs_read(fd,pa,PGSIZE);
+		fsize-=PGSIZE;
+		va+=PGSIZE;
+	  //printf("the pa is 0x%x\n",pa);
+	  //printf("the va is 0x%x\n",va);	
+	}
+	return (uintptr_t)DEFAULT_ENTRY;
 }
 
 void naive_uload(PCB *pcb, const char *filename) 
@@ -63,6 +86,7 @@ void context_kload(PCB *pcb, void *entry)
 
 void context_uload(PCB *pcb, const char *filename) 
 {
+	_protect(&(pcb->as));
   uintptr_t entry = loader(pcb, filename);
   //printf("the entry is 0x%x\n",entry);
   _Area stack;

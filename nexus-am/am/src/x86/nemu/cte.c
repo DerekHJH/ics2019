@@ -9,10 +9,14 @@ void __am_vecsys();
 void __am_vectrap();
 void __am_vecnull();
 
+void __am_get_cur_as(_Context *c);//hjh 
+void __am_switch(_Context *c);//hjj 
+
+
 _Context* __am_irq_handle(_Context *c) 
 {
   _Context *next = c;
-
+  __am_get_cur_as(c);
   //begin{hjh}
 //	printf("0x%p",c);
 	/*printf("The registers are:\n");
@@ -38,6 +42,7 @@ _Context* __am_irq_handle(_Context *c)
 		{
 			case 0x81:
 			{
+				//printf("the event is yield\n");
 				ev.event=_EVENT_YIELD;
 				break;
 			}
@@ -59,7 +64,8 @@ _Context* __am_irq_handle(_Context *c)
       next = c;
     }
   }
-
+  __am_switch(next);
+	//printf("next->pc is 0x%x\n",next->eip);
   return next;
 }
 
