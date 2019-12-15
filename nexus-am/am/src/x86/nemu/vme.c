@@ -66,6 +66,7 @@ int _protect(_AddressSpace *as)
 {
   PDE *updir = (PDE*)(pgalloc_usr(1));
   as->ptr = updir;
+	//printf("in protect the as->ptr is 0x%x\n",as->ptr);
   // map kernel space
   for (int i = 0; i < NR_PDE; i ++) 
 	{

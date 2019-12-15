@@ -10,7 +10,7 @@ static _Context* do_event(_Event e, _Context* c)
     case _EVENT_YIELD:
 		{
 			//printf("_EVENT_YIELD is triggered!!\n");
-			return schedule(c);
+			return schedule(c);	
 			break;
 		}
     case _EVENT_SYSCALL:

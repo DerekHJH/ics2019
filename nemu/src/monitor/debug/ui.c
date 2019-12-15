@@ -88,7 +88,7 @@ static int cmd_x(char *args)
 	EXPR=expr(Args, Success);
 	for(int i=1;i<=N;i++)
 	{
-    temp=paddr_read(EXPR,4);
+    temp=vaddr_read(EXPR,4);
 		printf("0x%08x:    0x%08x    %u\n",EXPR,temp,temp);
 		EXPR=EXPR+4;
 	}

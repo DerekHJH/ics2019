@@ -350,7 +350,7 @@ uint32_t eval(int l,int r)
 			case TK_MUL:return val1*val2;
 			case TK_DIV:return val1/val2;
 		  case TK_NOT:return !val2;
-		  case TK_DEREF:return paddr_read(val2, 4);
+		  case TK_DEREF:return vaddr_read(val2, 4);
 			default:
 				printf("There is no correct operation in debug at line %d\n",__LINE__);
 				assert(0);

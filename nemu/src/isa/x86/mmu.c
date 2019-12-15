@@ -6,6 +6,7 @@ paddr_t page_translate(vaddr_t addr)
 	vaddr_t t=(addr>>12)&0x3ff;
 	vaddr_t o=addr&0xfff;
 	PDE pde=(PDE)paddr_read((cpu.cr3.page_directory_base<<12)+(d<<2),4);
+	//printf("the pde is 0x%x\n",(cpu.cr3.page_directory_base<<12)+(d<<2));
   //begin{test}
 	//printf("the cpu.cr3 is 0x%x\n",cpu.cr3.page_directory_base);
 	
