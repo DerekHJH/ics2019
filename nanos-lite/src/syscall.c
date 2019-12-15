@@ -13,11 +13,7 @@ int sys_yield()
 	_yield();
 	return 0;
 }
-
-int sys_brk()
-{
-	return 0;
-}
+int mm_brk(uintptr_t brk, intptr_t increment); 
 
 _Context* do_syscall(_Context *c) 
 {
@@ -32,9 +28,9 @@ _Context* do_syscall(_Context *c)
   	case SYS_exit:
 		{
       //printf("I have reached here in do_syscall SYS_exit!!!\n");
-      _halt(a[1]);
+      //_halt(a[1]);
 			//printf("the file is %02d\n",a[1]);
-      //naive_uload(NULL,"/bin/init");
+      naive_uload(NULL,"/bin/init");
 			c->GPRx=0;
       break;
 		}
@@ -77,7 +73,7 @@ _Context* do_syscall(_Context *c)
 		case SYS_brk:
 		{
       //printf("I have reached here in do_syscall SYS_brk!!!\n");
-      c->GPRx=sys_brk();
+      c->GPRx=mm_brk(a[1],a[2]);
 			break;
 		}
 		case SYS_write:

@@ -75,7 +75,7 @@ void *_sbrk(intptr_t increment)
 	//begin{hjh}
   intptr_t newbrk=curbrk+increment;
 	intptr_t oldbrk=curbrk;
-	if(_syscall_(SYS_brk,newbrk,0,0)==0)
+	if(_syscall_(SYS_brk,newbrk,increment,0)==0)
 	{
 		curbrk=newbrk;
 		return (void *)oldbrk;
