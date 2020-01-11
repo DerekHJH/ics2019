@@ -3,7 +3,7 @@
 
 size_t serial_write(const void *buf, size_t offset, size_t len) 
 {
-	_yield();//testing
+	//_yield();//testing
   for(int i=0;i<len;i++)
 	{
 		_putc(*((char *)buf+i));
@@ -18,10 +18,10 @@ static const char *keyname[256] __attribute__((used)) = {
   [_KEY_NONE] = "NONE",
   _KEYS(NAME)
 };
-
+extern int fg_pcb;//hjh
 size_t events_read(void *buf, size_t offset, size_t len) 
 {
-	_yield();//testing
+	//_yield();//testing
   int Key=read_key();
 	if(Key!=_KEY_NONE)
 	{
@@ -33,8 +33,10 @@ size_t events_read(void *buf, size_t offset, size_t len)
 		len=sprintf(buf,"t %d\n",uptime());
 		//printf("the hahahahhahahahhaha is %010d\n",uptime());
 	}
-  
-  return len;
+  if(strcmp(buf,"kd F1\n")==0)fg_pcb=1; 
+  if(strcmp(buf,"kd F2\n")==0)fg_pcb=2; 
+	if(strcmp(buf,"kd F3\n")==0)fg_pcb=3; 
+	return len;
 }
 
 static char dispinfo[128] __attribute__((used)) = {};
@@ -48,7 +50,7 @@ size_t dispinfo_read(void *buf, size_t offset, size_t len)
 
 size_t fb_write(const void *buf, size_t offset, size_t len) 
 {
-	_yield();//testing
+	//_yield();//testing
   int w=screen_width(),x=(offset>>2)%w,y=(offset>>2)/w,tot=len>>2;
 	draw_rect((uint32_t *)buf,x,y,tot,1);
   return len;

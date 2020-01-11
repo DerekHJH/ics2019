@@ -5,6 +5,9 @@
 static PCB pcb[MAX_NR_PROC] __attribute__((used)) = {};
 static PCB pcb_boot = {};
 PCB *current = NULL;
+ 
+int fg_pcb=1;//hjh
+int cnt=0;
 
 void context_kload(PCB *pcb, void *entry); 
 void context_uload(PCB *pcb, const char *filename); 
@@ -30,6 +33,9 @@ void init_proc()
 {
   //Log("Start to uload /bin/dummy");
   //context_uload(&pcb[0],"/bin/dummy");
+	
+	context_uload(&pcb[2],"/bin/pal");
+	context_uload(&pcb[3],"/bin/pal");
 	context_uload(&pcb[1],"/bin/pal");
 	//context_kload(&pcb[0],(void *)hello_fun);//to test hello_fun
 	context_uload(&pcb[0],"/bin/hello");//to test hello_fun
@@ -46,6 +52,17 @@ _Context* schedule(_Context *prev)
 	//Log("schdule with current 0x%x and the &pcb[0] is 0x%x",current,&pcb[0]);
   current->cp=prev;
 	//current=&pcb[0];
-	current=(current==&pcb[0]?&pcb[1]:&pcb[0]);
-  return current->cp;
+	//current=(current==&pcb[0]?&pcb[1]:&pcb[0]);
+  if(cnt>18124)
+	{
+		current=&pcb[0];
+		cnt=0;
+	}
+	else
+	{
+		current=&pcb[fg_pcb];
+		cnt++;
+	}
+	
+	return current->cp;
 }
