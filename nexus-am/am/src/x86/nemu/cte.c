@@ -66,6 +66,7 @@ _Context* __am_irq_handle(_Context *c)
   }
   __am_switch(next);
 	//printf("next->pc is 0x%x\n",next->eip);
+	//printf("the next is %x and the c is %x\n",next, c);
   return next;
 }
 

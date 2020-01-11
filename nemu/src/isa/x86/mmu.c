@@ -23,14 +23,14 @@ paddr_t page_translate(vaddr_t addr)
     printf("And the d is 0x%x\n",d);
     printf("And the t is 0x%x\n",t);
     printf("And the o is 0x%x\n",o);
-		assert(0);
+		//assert(0);
 	}
 	PTE pte=(PTE)paddr_read((pde.page_frame<<12)+(t<<2),4);
 
 	if(pte.present==0)
 	{
 		printf("OOPS! pte->present==0!!!And the pde is 0x%x and the pte is 0x%x\n",pde.val,pte.val);
-		assert(0);
+		//assert(0);
 	}
 	return (paddr_t)((pte.page_frame<<12)+o);
 }

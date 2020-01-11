@@ -19,6 +19,9 @@ void free_page(void *p)
 /* The brk() system call handler. */
 int mm_brk(uintptr_t brk, intptr_t increment) 
 {
+
+	//printf("the current->max_brk is 0x%x",current->max_brk);
+	//printf("brk is 0x%x\n",brk);
 	//printf("current->brk is %08d\n",current->max_brk);
 	void *pa=NULL;
   while(brk>current->max_brk)
@@ -26,8 +29,7 @@ int mm_brk(uintptr_t brk, intptr_t increment)
     pa=new_page(1);
 		_map(&(current->as),(void *)current->max_brk,pa,1);
 		current->max_brk+=PGSIZE;
-	}
-	
+	}	
   return 0;
 }
 

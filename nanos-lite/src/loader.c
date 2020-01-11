@@ -19,7 +19,6 @@ size_t getdisk(int fd);
 
 static uintptr_t loader(PCB *pcb, const char *filename) 
 {
-
 	//printf("the filename is %s\n",filename);
 	int fd=fs_open(filename,0,0);
 	int Base=getdisk(fd);
@@ -48,17 +47,18 @@ static uintptr_t loader(PCB *pcb, const char *filename)
 			//printf("the i is %08d\n",i);
 			int temp=0,readbytes=0;
       va=(void *)Proheader.p_vaddr;
-			while(temp<Proheader.p_memsz)
+			while(temp<Proheader.p_filesz)
 			{
 			  pa=new_page(1);
 				_map(&(pcb->as),va,pa,1);
 
-				//printf("the pa is 0x%x and the va is 0x%x\n",pa,va);
-				readbytes=temp+PGSIZE>=Proheader.p_memsz?(Proheader.p_memsz-temp):PGSIZE;
+			  //printf("the pa is 0x%x and the va is 0x%x\n",pa,va);
+				readbytes=temp+PGSIZE>=Proheader.p_filesz?(Proheader.p_filesz-temp):PGSIZE;
 				//printf("temp is 0x%x and the read address is 0x%x\n",temp,Base+Proheader.p_offset+temp);
 			  ramdisk_read(pa,Base+Proheader.p_offset+temp,readbytes);
-				temp+=readbytes;
-				va+=readbytes;
+				memset(pa+readbytes,0,PGSIZE-readbytes);
+				temp+=PGSIZE;
+				va+=PGSIZE;
 				//printf("the readbytes is %d\n",readbytes);
 				/*for(int i=0;i<=1000;i++)
 				{
@@ -67,10 +67,20 @@ static uintptr_t loader(PCB *pcb, const char *filename)
 				printf("\n");
 				printf("\n");*/
 			}
+			while(temp<Proheader.p_memsz)
+			{
+			  pa=new_page(1);
+        _map(&(pcb->as),va,pa,1);
+        memset(pa,0,PGSIZE);
+				temp+=PGSIZE;
+				va+=PGSIZE;
+			}
       //ramdisk_read((void *)Proheader.p_vaddr,Base+Proheader.p_offset,Proheader.p_memsz);
 			//memset((void *)(Proheader.p_vaddr+Proheader.p_filesz),0,Proheader.p_memsz-Proheader.p_filesz);
 		}
 	}
+	pcb->max_brk=(uint32_t)va;
+	//printf("pcb_max_brk is 0x%x\n",pcb->max_brk);
 	//printf("the entry is 0x%x\n",ELFheader.e_entry);
   return ELFheader.e_entry;
 	
