@@ -6,7 +6,13 @@ _Context* schedule(_Context *prev);
 static _Context* do_event(_Event e, _Context* c) 
 {
   switch (e.event) 
-	{ 
+	{
+	  case _EVENT_IRQ_TIMER:
+		{
+			Log("hiahiahiahia I am about to finish PA!!!\n");
+			_yield();
+			break;
+		}	
     case _EVENT_YIELD:
 		{
 			//printf("_EVENT_YIELD is triggered!!\n");

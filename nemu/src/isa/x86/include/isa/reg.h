@@ -69,6 +69,8 @@ typedef struct
 
   CR3 cr3;
 	CR0 cr0;
+  bool INTR;
+
 	//end{hjh}
 
 } CPU_state;

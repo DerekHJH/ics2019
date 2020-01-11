@@ -12,12 +12,13 @@ void decinfo_set_jmp(bool is_jmp) {
 }
 
 void isa_exec(vaddr_t *pc);
+bool isa_query_intr(void);
 
 vaddr_t exec_once(void) {
   decinfo.seq_pc = cpu.pc;
 	//printf("hjh the pc is 0x%x\n",cpu.pc);
   isa_exec(&decinfo.seq_pc);
   update_pc();
-
+  if(isa_query_intr())update_pc();//hjh
   return decinfo.seq_pc;
 }

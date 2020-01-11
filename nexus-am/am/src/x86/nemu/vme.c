@@ -123,7 +123,7 @@ _Context *_ucontext(_AddressSpace *as, _Area ustack, _Area kstack, void *entry, 
 	memset(c,0,sizeof(_Context));
 	c->eip=(uintptr_t)entry;
 	c->cs=0x8;
-	c->eflags=0x2;//Other students set it as 1<<9;
+	c->eflags=0x200;
 	c->as=as;
   return c;
 }

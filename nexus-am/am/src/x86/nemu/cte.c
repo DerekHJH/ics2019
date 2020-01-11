@@ -40,6 +40,11 @@ _Context* __am_irq_handle(_Context *c)
     _Event ev = {0};
     switch (c->irq) 
 		{
+			case 0x20:
+			{
+				ev.event=_EVENT_IRQ_TIMER; 
+				break;
+			}
 			case 0x81:
 			{
 				//printf("the event is yield\n");
